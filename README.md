@@ -1,3 +1,3 @@
-# TimeForChess
+# Time for Chess
 
-Mobile app for recommending what to study next on your chess improvement journey.
+Mobile app that recommends what to focus on next on your chess improvement journey.

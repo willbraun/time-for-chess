@@ -1,85 +1,136 @@
-import { Image } from 'expo-image'
-import { Platform, StyleSheet, Text, View } from 'react-native'
+import { useFocusEffect, useRouter } from 'expo-router'
+import { useCallback, useState } from 'react'
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { HelloWave } from '@/components/hello-wave'
-import ParallaxScrollView from '@/components/parallax-scroll-view'
-import { ThemedText } from '@/components/themed-text'
-import { ThemedView } from '@/components/themed-view'
-import { Link } from 'expo-router'
+import { DistributionBar } from '@/components/distribution-bar'
+import { Colors } from '@/constants/theme'
+import { useColorScheme } from '@/hooks/use-color-scheme'
+import {
+	calculateDistribution,
+	getRecommendation,
+	type CategoryDistribution,
+	type Recommendation,
+} from '@/lib/recommendation'
+import { getCategories, getCategoryTotals } from '@/lib/sessions'
 
 export default function HomeScreen() {
-	return (
-		<ParallaxScrollView
-			headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-			headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} style={styles.reactLogo} />}
-		>
-			<View className='flex-1 items-center justify-center bg-white'>
-				<Text className='text-xl font-bold text-blue-500'>Welcome to Nativewind!</Text>
-			</View>
-			<ThemedView style={styles.titleContainer}>
-				<ThemedText type='title'>Blah</ThemedText>
-				<HelloWave />
-			</ThemedView>
-			<ThemedView style={styles.stepContainer}>
-				<ThemedText type='subtitle'>Step 1: Try it</ThemedText>
-				<ThemedText>
-					Edit <ThemedText type='defaultSemiBold'>app/(tabs)/index.tsx</ThemedText> to see changes. Press{' '}
-					<ThemedText type='defaultSemiBold'>
-						{Platform.select({
-							ios: 'cmd + d',
-							android: 'cmd + m',
-							web: 'F12',
-						})}
-					</ThemedText>{' '}
-					to open developer tools.
-				</ThemedText>
-			</ThemedView>
-			<ThemedView style={styles.stepContainer}>
-				<Link href='/modal'>
-					<Link.Trigger>
-						<ThemedText type='subtitle'>Step 2: Explore</ThemedText>
-					</Link.Trigger>
-					<Link.Preview />
-					<Link.Menu>
-						<Link.MenuAction title='Action' icon='cube' onPress={() => alert('Action pressed')} />
-						<Link.MenuAction title='Share' icon='square.and.arrow.up' onPress={() => alert('Share pressed')} />
-						<Link.Menu title='More' icon='ellipsis'>
-							<Link.MenuAction title='Delete' icon='trash' destructive onPress={() => alert('Delete pressed')} />
-						</Link.Menu>
-					</Link.Menu>
-				</Link>
+	const router = useRouter()
+	const colorScheme = useColorScheme() ?? 'light'
+	const colors = Colors[colorScheme]
+	const insets = useSafeAreaInsets()
 
-				<ThemedText>{`Tap the Explore tab to learn more about what's included in this starter app.`}</ThemedText>
-			</ThemedView>
-			<ThemedView style={styles.stepContainer}>
-				<ThemedText type='subtitle'>Step 3: Get a fresh start</ThemedText>
-				<ThemedText>
-					{`When you're ready, run `}
-					<ThemedText type='defaultSemiBold'>npm run reset-project</ThemedText> to get a fresh{' '}
-					<ThemedText type='defaultSemiBold'>app</ThemedText> directory. This will move the current{' '}
-					<ThemedText type='defaultSemiBold'>app</ThemedText> to{' '}
-					<ThemedText type='defaultSemiBold'>app-example</ThemedText>.
-				</ThemedText>
-			</ThemedView>
-		</ParallaxScrollView>
+	const [distribution, setDistribution] = useState<CategoryDistribution[]>([])
+	const [recommendation, setRecommendation] = useState<Recommendation | null>(null)
+	const [hasData, setHasData] = useState(false)
+
+	useFocusEffect(
+		useCallback(() => {
+			async function load() {
+				const [categories, totals] = await Promise.all([getCategories(), getCategoryTotals(30)])
+				const dist = calculateDistribution(categories, totals)
+				setDistribution(dist)
+				setRecommendation(getRecommendation(dist))
+				setHasData(totals.length > 0)
+			}
+			load()
+		}, []),
+	)
+
+	const handleRecommendationPress = () => {
+		if (recommendation) {
+			router.push({
+				pathname: '/session',
+				params: { category: String(recommendation.category.category_id) },
+			} as any)
+		} else {
+			router.push('/session' as any)
+		}
+	}
+
+	return (
+		<ScrollView
+			style={[styles.scroll, { backgroundColor: colors.background }]}
+			contentContainerStyle={[styles.content, { paddingTop: insets.top + 16 }]}
+		>
+			<Text style={[styles.title, { color: colors.text }]}>Time for Chess</Text>
+
+			{/* Recommendation card */}
+			<Pressable onPress={handleRecommendationPress}>
+				{hasData && recommendation ? (
+					<View style={[styles.recCard, { backgroundColor: colors.accent }]}>
+						<Text style={styles.recLabel}>Recommended</Text>
+						<Text style={styles.recCategory}>{recommendation.category.name}</Text>
+						<Text style={styles.recHint}>Tap to start a session</Text>
+					</View>
+				) : hasData ? (
+					<View style={[styles.recCard, { backgroundColor: colors.primary }]}>
+						<Text style={styles.recCategory}>You&apos;re balanced!</Text>
+						<Text style={styles.recHint}>Tap to start any session</Text>
+					</View>
+				) : (
+					<View style={[styles.recCard, { backgroundColor: colors.secondary }]}>
+						<Text style={styles.recCategory}>Get started</Text>
+						<Text style={styles.recHint}>Log your first session to see recommendations</Text>
+					</View>
+				)}
+			</Pressable>
+
+			{/* Distribution bars */}
+			{hasData && (
+				<View style={styles.barsSection}>
+					<Text style={[styles.sectionTitle, { color: colors.text }]}>30-Day Distribution</Text>
+					{distribution.map(d => (
+						<DistributionBar key={d.category_id} data={d} />
+					))}
+				</View>
+			)}
+		</ScrollView>
 	)
 }
 
 const styles = StyleSheet.create({
-	titleContainer: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: 8,
+	scroll: {
+		flex: 1,
 	},
-	stepContainer: {
-		gap: 8,
-		marginBottom: 8,
+	content: {
+		padding: 20,
+		paddingBottom: 32,
 	},
-	reactLogo: {
-		height: 178,
-		width: 290,
-		bottom: 0,
-		left: 0,
-		position: 'absolute',
+	title: {
+		fontSize: 28,
+		fontWeight: '700',
+		marginBottom: 20,
+	},
+	recCard: {
+		borderRadius: 16,
+		padding: 24,
+		marginBottom: 24,
+	},
+	recLabel: {
+		color: 'rgba(255,255,255,0.7)',
+		fontSize: 13,
+		fontWeight: '600',
+		textTransform: 'uppercase',
+		letterSpacing: 0.5,
+		marginBottom: 4,
+	},
+	recCategory: {
+		color: '#FFFFFF',
+		fontSize: 22,
+		fontWeight: '700',
+		marginBottom: 4,
+	},
+	recHint: {
+		color: 'rgba(255,255,255,0.8)',
+		fontSize: 14,
+	},
+	barsSection: {
+		marginTop: 4,
+	},
+	sectionTitle: {
+		fontSize: 18,
+		fontWeight: '600',
+		marginBottom: 16,
 	},
 })
