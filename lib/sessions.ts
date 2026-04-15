@@ -124,3 +124,8 @@ export async function getRecentSessions(days: number = 30): Promise<SessionWithC
 		[cutoff],
 	)
 }
+
+export async function deleteSession(sessionId: number): Promise<void> {
+	const db = await getDatabase()
+	await db.runAsync('DELETE FROM sessions WHERE id = ?', [sessionId])
+}
