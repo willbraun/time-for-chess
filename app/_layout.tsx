@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
 import './../global.css'
 
-import { useColorScheme } from '@/hooks/use-color-scheme'
 import { getDatabase } from '@/lib/database'
 import { SessionProvider } from '@/lib/session-context'
+import { useColorScheme } from 'react-native'
 
 export const unstable_settings = {
 	anchor: '(tabs)',

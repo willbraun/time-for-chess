@@ -2,3 +2,39 @@
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css';
 @import 'nativewind/theme';
+
+:root {
+	--app-text: #11181c;
+	--app-bg: #ffffff;
+	--app-tint: #0a7ea4;
+	--app-icon: #687076;
+	--app-surface: #f3f4f6;
+	--app-border: #e5e7eb;
+	--app-primary: #1e3a5f;
+	--app-secondary: #4a5568;
+	--app-accent: #d97706;
+
+	@media (prefers-color-scheme: dark) {
+		--app-text: #ecedee;
+		--app-bg: #151718;
+		--app-tint: #ffffff;
+		--app-icon: #9ba1a6;
+		--app-surface: #1e2022;
+		--app-border: #2e3234;
+		--app-primary: #4a90d9;
+		--app-secondary: #2d3748;
+		--app-accent: #f59e0b;
+	}
+}
+
+@theme inline {
+	--color-app-text: var(--app-text);
+	--color-app-bg: var(--app-bg);
+	--color-app-tint: var(--app-tint);
+	--color-app-icon: var(--app-icon);
+	--color-app-surface: var(--app-surface);
+	--color-app-border: var(--app-border);
+	--color-app-primary: var(--app-primary);
+	--color-app-secondary: var(--app-secondary);
+	--color-app-accent: var(--app-accent);
+}

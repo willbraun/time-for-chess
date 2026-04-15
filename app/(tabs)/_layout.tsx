@@ -5,25 +5,25 @@ import { View } from 'react-native'
 import { HapticTab } from '@/components/haptic-tab'
 import { SessionBar } from '@/components/session-bar'
 import { IconSymbol } from '@/components/ui/icon-symbol'
-import { Colors } from '@/constants/theme'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 
+const tint = { light: '#0a7ea4', dark: '#ffffff' }
+const icon = { light: '#687076', dark: '#9BA1A6' }
+
 export default function TabLayout() {
-	const colorScheme = useColorScheme()
+	const colorScheme = useColorScheme() ?? 'light'
 
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+				tabBarActiveTintColor: tint[colorScheme],
 				headerShown: false,
 				tabBarButton: HapticTab,
 			}}
 			tabBar={props => (
 				<View>
 					<SessionBar />
-					<View
-						style={{ height: 80, flexDirection: 'row', backgroundColor: Colors[colorScheme ?? 'light'].background }}
-					>
+					<View className='h-20 flex-row bg-app-bg'>
 						{props.state.routes.map((route, index) => {
 							const { options } = props.descriptors[route.key]
 							const isFocused = props.state.index === index
@@ -42,17 +42,10 @@ export default function TabLayout() {
 											props.navigation.navigate(route.name)
 										}
 									}}
-									style={{
-										flex: 1,
-										alignItems: 'center',
-										paddingVertical: 10,
-										paddingBottom: 20,
-									}}
+									className='flex-1 items-center py-2.5 pb-5'
 								>
 									{options.tabBarIcon?.({
-										color: isFocused
-											? Colors[colorScheme ?? 'light'].tabIconSelected
-											: Colors[colorScheme ?? 'light'].tabIconDefault,
+										color: isFocused ? tint[colorScheme] : icon[colorScheme],
 										focused: isFocused,
 										size: 28,
 									})}

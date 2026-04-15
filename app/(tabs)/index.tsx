@@ -1,11 +1,9 @@
 import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Pressable, ScrollView, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { DistributionBar } from '@/components/distribution-bar'
-import { Colors } from '@/constants/theme'
-import { useColorScheme } from '@/hooks/use-color-scheme'
 import {
 	calculateDistribution,
 	getRecommendation,
@@ -16,8 +14,6 @@ import { getCategories, getCategoryTotals } from '@/lib/sessions'
 
 export default function HomeScreen() {
 	const router = useRouter()
-	const colorScheme = useColorScheme() ?? 'light'
-	const colors = Colors[colorScheme]
 	const insets = useSafeAreaInsets()
 
 	const [distribution, setDistribution] = useState<CategoryDistribution[]>([])
@@ -50,36 +46,36 @@ export default function HomeScreen() {
 
 	return (
 		<ScrollView
-			style={[styles.scroll, { backgroundColor: colors.background }]}
-			contentContainerStyle={[styles.content, { paddingTop: insets.top + 16 }]}
+			className='flex-1 bg-app-bg'
+			contentContainerStyle={{ padding: 20, paddingBottom: 32, paddingTop: insets.top + 16 }}
 		>
-			<Text style={[styles.title, { color: colors.text }]}>Time for Chess</Text>
+			<Text className='text-[28px] font-bold mb-5 text-app-text'>Time for Chess</Text>
 
 			{/* Recommendation card */}
 			<Pressable onPress={handleRecommendationPress}>
 				{hasData && recommendation ? (
-					<View style={[styles.recCard, { backgroundColor: colors.accent }]}>
-						<Text style={styles.recLabel}>Recommended</Text>
-						<Text style={styles.recCategory}>{recommendation.category.name}</Text>
-						<Text style={styles.recHint}>Tap to start a session</Text>
+					<View className='rounded-2xl p-6 mb-6 bg-app-accent'>
+						<Text className='text-white/70 text-[13px] font-semibold uppercase tracking-[0.5px] mb-1'>Recommended</Text>
+						<Text className='text-white text-[22px] font-bold mb-1'>{recommendation.category.name}</Text>
+						<Text className='text-white/80 text-sm'>Tap to start a session</Text>
 					</View>
 				) : hasData ? (
-					<View style={[styles.recCard, { backgroundColor: colors.primary }]}>
-						<Text style={styles.recCategory}>You&apos;re balanced!</Text>
-						<Text style={styles.recHint}>Tap to start any session</Text>
+					<View className='rounded-2xl p-6 mb-6 bg-app-primary'>
+						<Text className='text-white text-[22px] font-bold mb-1'>You&apos;re balanced!</Text>
+						<Text className='text-white/80 text-sm'>Tap to start any session</Text>
 					</View>
 				) : (
-					<View style={[styles.recCard, { backgroundColor: colors.secondary }]}>
-						<Text style={styles.recCategory}>Get started</Text>
-						<Text style={styles.recHint}>Log your first session to see recommendations</Text>
+					<View className='rounded-2xl p-6 mb-6 bg-app-secondary'>
+						<Text className='text-white text-[22px] font-bold mb-1'>Get started</Text>
+						<Text className='text-white/80 text-sm'>Log your first session to see recommendations</Text>
 					</View>
 				)}
 			</Pressable>
 
 			{/* Distribution bars */}
 			{hasData && (
-				<View style={styles.barsSection}>
-					<Text style={[styles.sectionTitle, { color: colors.text }]}>30-Day Distribution</Text>
+				<View className='mt-1'>
+					<Text className='text-lg font-semibold mb-4 text-app-text'>30-Day Distribution</Text>
 					{distribution.map(d => (
 						<DistributionBar key={d.category_id} data={d} />
 					))}
@@ -88,49 +84,3 @@ export default function HomeScreen() {
 		</ScrollView>
 	)
 }
-
-const styles = StyleSheet.create({
-	scroll: {
-		flex: 1,
-	},
-	content: {
-		padding: 20,
-		paddingBottom: 32,
-	},
-	title: {
-		fontSize: 28,
-		fontWeight: '700',
-		marginBottom: 20,
-	},
-	recCard: {
-		borderRadius: 16,
-		padding: 24,
-		marginBottom: 24,
-	},
-	recLabel: {
-		color: 'rgba(255,255,255,0.7)',
-		fontSize: 13,
-		fontWeight: '600',
-		textTransform: 'uppercase',
-		letterSpacing: 0.5,
-		marginBottom: 4,
-	},
-	recCategory: {
-		color: '#FFFFFF',
-		fontSize: 22,
-		fontWeight: '700',
-		marginBottom: 4,
-	},
-	recHint: {
-		color: 'rgba(255,255,255,0.8)',
-		fontSize: 14,
-	},
-	barsSection: {
-		marginTop: 4,
-	},
-	sectionTitle: {
-		fontSize: 18,
-		fontWeight: '600',
-		marginBottom: 16,
-	},
-})

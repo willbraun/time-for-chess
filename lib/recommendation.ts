@@ -14,6 +14,8 @@ export interface Recommendation {
 	score: number
 }
 
+// Band width constant used to compute the range around the target percentage
+// Lower is more strict / narrower band around the target percentage
 const BAND_K = 0.2
 
 export function calculateDistribution(
@@ -46,7 +48,10 @@ export function getRecommendation(distribution: CategoryDistribution[]): Recomme
 	let best: Recommendation | null = null
 
 	for (const cat of distribution) {
-		if (cat.actual >= cat.bandLow) continue
+		if (cat.actual >= cat.bandLow) {
+			continue
+		}
+
 		const gap = cat.target - cat.actual
 		const score = Math.sqrt(Math.abs(gap))
 		if (!best || score > best.score) {

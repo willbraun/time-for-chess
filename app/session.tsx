@@ -1,9 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 
-import { Colors } from '@/constants/theme'
-import { useColorScheme } from '@/hooks/use-color-scheme'
 import { formatDuration } from '@/lib/format'
 import { useSession } from '@/lib/session-context'
 import { getCategories, type Category } from '@/lib/sessions'
@@ -20,8 +18,6 @@ const PRESETS = [
 export default function SessionScreen() {
 	const router = useRouter()
 	const params = useLocalSearchParams<{ category?: string }>()
-	const colorScheme = useColorScheme() ?? 'light'
-	const colors = Colors[colorScheme]
 	const {
 		activeSession,
 		elapsedSeconds,
@@ -104,36 +100,29 @@ export default function SessionScreen() {
 	}
 
 	return (
-		<View style={[styles.container, { backgroundColor: colors.background }]}>
+		<View className='flex-1 bg-app-bg'>
 			{/* Handle bar */}
-			<View style={styles.handleContainer}>
-				<View style={[styles.handle, { backgroundColor: colors.icon }]} />
+			<View className='items-center pt-2 pb-1'>
+				<View className='w-9 h-1.25 rounded opacity-30 bg-app-icon' />
 			</View>
 
-			{step === 'select' && <SelectStep categories={categories} onSelect={handleSelectCategory} colors={colors} />}
+			{step === 'select' && <SelectStep categories={categories} onSelect={handleSelectCategory} />}
 			{step === 'time-choice' && selectedCategory && (
 				<TimeChoiceStep
 					category={selectedCategory}
 					onStartTimer={handleStartTimer}
 					onPreset={handlePreset}
 					onBack={() => setStep('select')}
-					colors={colors}
 				/>
 			)}
 			{step === 'active' && activeSession && (
-				<ActiveStep
-					categoryName={activeSession.category_name}
-					elapsedSeconds={elapsedSeconds}
-					onStop={handleStop}
-					colors={colors}
-				/>
+				<ActiveStep categoryName={activeSession.category_name} elapsedSeconds={elapsedSeconds} onStop={handleStop} />
 			)}
 			{step === 'auto-close' && activeSession && (
 				<AutoCloseStep
 					categoryName={activeSession.category_name}
 					onContinue={handleAutoCloseContinue}
 					onStop={handleAutoCloseStop}
-					colors={colors}
 				/>
 			)}
 			{step === 'summary' && (
@@ -141,33 +130,20 @@ export default function SessionScreen() {
 					categoryName={selectedCategory?.name ?? activeSession?.category_name ?? ''}
 					durationSeconds={completedDuration}
 					onDone={handleDone}
-					colors={colors}
 				/>
 			)}
 		</View>
 	)
 }
 
-function SelectStep({
-	categories,
-	onSelect,
-	colors,
-}: {
-	categories: Category[]
-	onSelect: (cat: Category) => void
-	colors: typeof Colors.light
-}) {
+function SelectStep({ categories, onSelect }: { categories: Category[]; onSelect: (cat: Category) => void }) {
 	return (
-		<View style={styles.stepContainer}>
-			<Text style={[styles.heading, { color: colors.text }]}>Choose a category</Text>
-			<View style={styles.categoryGrid}>
+		<View className='flex-1 gap-4 p-6'>
+			<Text className='text-2xl font-bold text-app-text'>Choose a category</Text>
+			<View className='gap-3 mt-4'>
 				{categories.map(cat => (
-					<Pressable
-						key={cat.id}
-						onPress={() => onSelect(cat)}
-						style={[styles.categoryButton, { backgroundColor: colors.secondary }]}
-					>
-						<Text style={[styles.categoryButtonText, { color: '#FFFFFF' }]}>{cat.name}</Text>
+					<Pressable key={cat.id} onPress={() => onSelect(cat)} className='py-4.5 px-5 rounded-xl bg-app-secondary'>
+						<Text className='text-[17px] font-semibold text-center text-white'>{cat.name}</Text>
 					</Pressable>
 				))}
 			</View>
@@ -180,36 +156,34 @@ function TimeChoiceStep({
 	onStartTimer,
 	onPreset,
 	onBack,
-	colors,
 }: {
 	category: Category
 	onStartTimer: () => void
 	onPreset: (seconds: number) => void
 	onBack: () => void
-	colors: typeof Colors.light
 }) {
 	return (
-		<View style={styles.stepContainer}>
+		<View className='flex-1 gap-4 p-6'>
 			<Pressable onPress={onBack}>
-				<Text style={[styles.backText, { color: colors.primary }]}>← Back</Text>
+				<Text className='text-base mb-4 text-app-primary'>← Back</Text>
 			</Pressable>
-			<Text style={[styles.heading, { color: colors.text }]}>{category.name}</Text>
-			<Text style={[styles.subheading, { color: colors.icon }]}>How do you want to log time?</Text>
+			<Text className='text-2xl font-bold text-app-text'>{category.name}</Text>
+			<Text className='text-base mb-6 text-app-icon'>How do you want to log time?</Text>
 
-			<Pressable onPress={onStartTimer} style={[styles.primaryButton, { backgroundColor: colors.primary }]}>
-				<Text style={styles.primaryButtonText}>Start Timer</Text>
+			<Pressable onPress={onStartTimer} className='py-4 rounded-xl items-center px-4 bg-app-primary'>
+				<Text className='text-white text-[17px] font-semibold'>Start Timer</Text>
 			</Pressable>
 
-			<Text style={[styles.orText, { color: colors.icon }]}>or log a completed session</Text>
+			<Text className='text-center mb-4 text-sm text-app-icon'>or log a completed session</Text>
 
-			<View style={styles.presetRow}>
+			<View className='flex-row gap-2.5 flex-wrap'>
 				{PRESETS.map(p => (
 					<Pressable
 						key={p.seconds}
 						onPress={() => onPreset(p.seconds)}
-						style={[styles.presetButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+						className='flex-1 min-w-[40%] py-3.5 rounded-[10px] border border-app-border items-center bg-app-surface'
 					>
-						<Text style={[styles.presetText, { color: colors.text }]}>{p.label}</Text>
+						<Text className='text-[15px] font-medium text-app-text'>{p.label}</Text>
 					</Pressable>
 				))}
 			</View>
@@ -221,19 +195,19 @@ function ActiveStep({
 	categoryName,
 	elapsedSeconds,
 	onStop,
-	colors,
 }: {
 	categoryName: string
 	elapsedSeconds: number
 	onStop: () => void
-	colors: typeof Colors.light
 }) {
 	return (
-		<View style={[styles.stepContainer, styles.activeContainer]}>
-			<Text style={[styles.activeCategory, { color: colors.icon }]}>{categoryName}</Text>
-			<Text style={[styles.activeTimer, { color: colors.text }]}>{formatDuration(elapsedSeconds)}</Text>
-			<Pressable onPress={onStop} style={[styles.stopButton, { backgroundColor: colors.primary }]}>
-				<Text style={styles.stopButtonText}>Stop</Text>
+		<View className='flex-1 gap-4 p-6 items-center justify-center'>
+			<Text className='text-xl font-semibold mb-4 text-app-icon'>{categoryName}</Text>
+			<Text className='text-[64px] font-extralight text-app-text mb-12' style={{ fontVariant: ['tabular-nums'] }}>
+				{formatDuration(elapsedSeconds)}
+			</Text>
+			<Pressable onPress={onStop} className='w-25 h-25 rounded-full items-center justify-center bg-app-primary'>
+				<Text className='text-white text-lg font-bold'>Stop</Text>
 			</Pressable>
 		</View>
 	)
@@ -243,34 +217,32 @@ function AutoCloseStep({
 	categoryName,
 	onContinue,
 	onStop,
-	colors,
 }: {
 	categoryName: string
 	onContinue: () => void
 	onStop: (seconds: number) => void
-	colors: typeof Colors.light
 }) {
 	return (
-		<View style={styles.stepContainer}>
-			<Text style={[styles.heading, { color: colors.text }]}>Session still open</Text>
-			<Text style={[styles.subheading, { color: colors.icon }]}>
+		<View className='flex-1 gap-4 p-6'>
+			<Text className='text-2xl font-bold text-app-text'>Session still open</Text>
+			<Text className='text-base mb-6 text-app-icon'>
 				Your {categoryName} session has been running for over an hour.
 			</Text>
 
-			<Pressable onPress={onContinue} style={[styles.primaryButton, { backgroundColor: colors.primary }]}>
-				<Text style={styles.primaryButtonText}>Continue Session</Text>
+			<Pressable onPress={onContinue} className='py-4 rounded-xl items-center px-4 bg-app-primary'>
+				<Text className='text-white text-[17px] font-semibold'>Continue Session</Text>
 			</Pressable>
 
-			<Text style={[styles.orText, { color: colors.icon }]}>or stop and estimate your time</Text>
+			<Text className='text-center mb-4 text-sm text-app-icon'>or stop and estimate your time</Text>
 
-			<View style={styles.presetRow}>
+			<View className='flex-row gap-2.5 flex-wrap'>
 				{PRESETS.map(p => (
 					<Pressable
 						key={p.seconds}
 						onPress={() => onStop(p.seconds)}
-						style={[styles.presetButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+						className='flex-1 min-w-[40%] py-3.5 rounded-[10px] border border-app-border items-center bg-app-surface'
 					>
-						<Text style={[styles.presetText, { color: colors.text }]}>{p.label}</Text>
+						<Text className='text-[15px] font-medium text-app-text'>{p.label}</Text>
 					</Pressable>
 				))}
 			</View>
@@ -282,155 +254,23 @@ function SummaryStep({
 	categoryName,
 	durationSeconds,
 	onDone,
-	colors,
 }: {
 	categoryName: string
 	durationSeconds: number
 	onDone: () => void
-	colors: typeof Colors.light
 }) {
 	return (
-		<View style={[styles.stepContainer, styles.summaryContainer]}>
-			<Text style={[styles.heading, { color: colors.text }]}>Session logged</Text>
-			<View style={[styles.summaryCard, { backgroundColor: colors.primary }]}>
-				<Text style={styles.summaryCategory}>{categoryName}</Text>
-				<Text style={styles.summaryDuration}>{formatDuration(durationSeconds)}</Text>
+		<View className='flex-1 gap-4 p-6 items-center justify-center'>
+			<Text className='text-2xl font-bold text-app-text'>Session logged</Text>
+			<View className='py-6 px-8 rounded-2xl items-center bg-app-primary'>
+				<Text className='text-white text-lg font-semibold mb-1'>{categoryName}</Text>
+				<Text className='text-white text-[36px] font-light' style={{ fontVariant: ['tabular-nums'] }}>
+					{formatDuration(durationSeconds)}
+				</Text>
 			</View>
-			<Pressable onPress={onDone} style={[styles.primaryButton, { backgroundColor: colors.primary }]}>
-				<Text style={styles.primaryButtonText}>Done</Text>
+			<Pressable onPress={onDone} className='py-4 rounded-xl items-center px-4 bg-app-primary self-stretch'>
+				<Text className='text-white text-[17px] font-semibold'>Done</Text>
 			</Pressable>
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	handleContainer: {
-		alignItems: 'center',
-		paddingTop: 8,
-		paddingBottom: 4,
-	},
-	handle: {
-		width: 36,
-		height: 5,
-		borderRadius: 3,
-		opacity: 0.3,
-	},
-	stepContainer: {
-		flex: 1,
-		gap: 16,
-		padding: 24,
-	},
-	heading: {
-		fontSize: 24,
-		fontWeight: '700',
-	},
-	subheading: {
-		fontSize: 16,
-		marginBottom: 24,
-	},
-	backText: {
-		fontSize: 16,
-		marginBottom: 16,
-	},
-	categoryGrid: {
-		gap: 12,
-		marginTop: 16,
-	},
-	categoryButton: {
-		paddingVertical: 18,
-		paddingHorizontal: 20,
-		borderRadius: 12,
-	},
-	categoryButtonText: {
-		fontSize: 17,
-		fontWeight: '600',
-		textAlign: 'center',
-	},
-	primaryButton: {
-		paddingVertical: 16,
-		borderRadius: 12,
-		alignItems: 'center',
-		paddingHorizontal: 16,
-	},
-	primaryButtonText: {
-		color: '#FFFFFF',
-		fontSize: 17,
-		fontWeight: '600',
-	},
-	orText: {
-		textAlign: 'center',
-		marginBottom: 16,
-		fontSize: 14,
-	},
-	presetRow: {
-		flexDirection: 'row',
-		gap: 10,
-		flexWrap: 'wrap',
-	},
-	presetButton: {
-		flex: 1,
-		minWidth: '40%',
-		paddingVertical: 14,
-		borderRadius: 10,
-		borderWidth: 1,
-		alignItems: 'center',
-	},
-	presetText: {
-		fontSize: 15,
-		fontWeight: '500',
-	},
-	activeContainer: {
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	activeCategory: {
-		fontSize: 20,
-		fontWeight: '600',
-		color: '#9CA3AF',
-		marginBottom: 16,
-	},
-	activeTimer: {
-		fontSize: 64,
-		fontWeight: '200',
-		color: '#FFFFFF',
-		fontVariant: ['tabular-nums'],
-		marginBottom: 48,
-	},
-	stopButton: {
-		width: 100,
-		height: 100,
-		borderRadius: 50,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	stopButtonText: {
-		color: '#FFFFFF',
-		fontSize: 18,
-		fontWeight: '700',
-	},
-	summaryContainer: {
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	summaryCard: {
-		paddingVertical: 24,
-		paddingHorizontal: 32,
-		borderRadius: 16,
-		alignItems: 'center',
-	},
-	summaryCategory: {
-		color: '#FFFFFF',
-		fontSize: 18,
-		fontWeight: '600',
-		marginBottom: 4,
-	},
-	summaryDuration: {
-		color: '#FFFFFF',
-		fontSize: 36,
-		fontWeight: '300',
-		fontVariant: ['tabular-nums'],
-	},
-})
