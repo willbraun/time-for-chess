@@ -93,7 +93,7 @@ export default function HistoryScreen() {
 					</View>
 				}
 				renderSectionHeader={({ section }) => (
-					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] py-2 text-app-icon bg-app-bg'>
+					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 text-app-icon bg-app-bg'>
 						{section.title}
 					</Text>
 				)}
@@ -109,7 +109,6 @@ export default function HistoryScreen() {
 						rightThreshold={40}
 					>
 						<View className='flex-row items-center py-3 border-b border-app-border bg-app-bg'>
-							<View className='w-2.5 h-2.5 rounded-full mr-3 bg-app-primary' />
 							<View className='flex-1'>
 								<Text className='text-[15px] font-medium text-app-text'>{item.category_name}</Text>
 								<Text className='text-[13px] mt-0.5 text-app-icon'>

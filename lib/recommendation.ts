@@ -7,6 +7,7 @@ export interface CategoryDistribution {
 	actual: number
 	bandLow: number
 	bandHigh: number
+	score: number
 }
 
 export interface Recommendation {
@@ -40,6 +41,7 @@ export function calculateDistribution(
 			actual,
 			bandLow,
 			bandHigh,
+			score: actual >= bandLow ? 0 : Math.sqrt(target - actual),
 		}
 	})
 }

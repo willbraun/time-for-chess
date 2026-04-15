@@ -75,7 +75,7 @@ export default function HomeScreen() {
 			{/* Distribution bars */}
 			{hasData && (
 				<View className='mt-1'>
-					<Text className='text-lg font-semibold mb-4 text-app-text'>30-Day Distribution</Text>
+					<Text className='text-xl font-semibold mb-4 text-app-text'>30-Day Distribution</Text>
 					{distribution.map(d => (
 						<DistributionBar key={d.category_id} data={d} />
 					))}

@@ -9,27 +9,39 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 
 	const isUnder = data.actual < data.bandLow
 
+	function getDotColor(): string {
+		if (data.actual >= data.bandLow) return '#22c55e'
+		// Sweep hue from 60° (yellow) to 0° (red) as score increases
+		const hue = (1 - Math.min(1, data.score)) * 60
+		return `hsl(${hue},90%,45%)`
+	}
+
 	return (
 		<View className='mb-4'>
 			<View className='flex-row justify-between items-center mb-1.5'>
-				<Text className='text-sm font-medium text-app-text'>{data.name}</Text>
+				<Text className=' font-medium text-app-text'>{data.name}</Text>
 				<Text
-					className={`text-sm font-semibold ${isUnder ? 'text-app-accent' : 'text-app-icon'}`}
-					style={{ fontVariant: ['tabular-nums'] }}
+					className={` font-semibold ${isUnder ? 'text-app-accent' : 'text-app-icon'}`}
+					style={{ fontVariant: ['tabular-nums'], color: getDotColor() }}
 				>
 					{actualPct}%<Text className='font-normal text-[13px] text-app-icon'> / {targetPct}%</Text>
 				</Text>
 			</View>
-			<View className='h-2 rounded bg-app-surface' style={{ position: 'relative', overflow: 'visible' }}>
+			<View className='h-10 rounded bg-app-surface' style={{ position: 'relative', overflow: 'visible' }}>
 				{/* Band range */}
 				<View
-					className='absolute top-0 h-full rounded bg-black/8 dark:bg-white/10'
+					className='absolute top-0 h-full bg-black/8 dark:bg-white/20'
 					style={{ left: `${bandLowPct}%`, width: `${bandHighPct - bandLowPct}%` }}
 				/>
 				{/* Actual percentage dot */}
 				<View
-					className='absolute w-4 h-4 rounded-full bg-app-primary border-2 border-white -ml-2'
-					style={{ top: -4, left: `${Math.min(actualPct, 100)}%` }}
+					className='absolute w-5 h-5 rounded-full border-2 border-white -ml-2.5'
+					style={{
+						top: '50%',
+						left: `${Math.min(actualPct, 100)}%`,
+						transform: [{ translateY: '-50%' }],
+						backgroundColor: getDotColor(),
+					}}
 				/>
 			</View>
 		</View>
