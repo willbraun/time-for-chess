@@ -76,9 +76,9 @@ export default function HistoryScreen() {
 			<SectionList
 				sections={sections}
 				keyExtractor={item => String(item.id)}
-				contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 32, paddingTop: insets.top + 16 }}
+				contentContainerStyle={{ paddingBottom: 32, paddingTop: insets.top + 16 }}
 				ListHeaderComponent={
-					<View className='mb-2'>
+					<View className='mb-2 px-5'>
 						<Text className='text-[28px] font-bold mb-4 text-app-text'>History</Text>
 						<View className='flex-row rounded-xl p-4 mb-2 bg-app-surface'>
 							<View className='flex-1 items-center'>
@@ -93,7 +93,7 @@ export default function HistoryScreen() {
 					</View>
 				}
 				renderSectionHeader={({ section }) => (
-					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 text-app-icon bg-app-bg'>
+					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 px-5 text-app-icon bg-app-bg'>
 						{section.title}
 					</Text>
 				)}
@@ -108,7 +108,7 @@ export default function HistoryScreen() {
 						renderRightActions={() => renderRightActions(item.id)}
 						rightThreshold={40}
 					>
-						<View className='flex-row items-center py-3 border-b border-app-border bg-app-bg'>
+						<View className='flex-row items-center py-3 px-5 border-b border-app-border bg-app-bg'>
 							<View className='flex-1'>
 								<Text className='text-[15px] font-medium text-app-text'>{item.category_name}</Text>
 								<Text className='text-[13px] mt-0.5 text-app-icon'>
@@ -123,7 +123,7 @@ export default function HistoryScreen() {
 					</Swipeable>
 				)}
 				ListEmptyComponent={
-					<View className='items-center pt-15'>
+					<View className='items-center pt-15 px-5'>
 						<Text className='text-base text-app-icon'>No sessions yet. Start your first one!</Text>
 					</View>
 				}

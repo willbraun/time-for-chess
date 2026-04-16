@@ -1,10 +1,16 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { useEffect, useRef, useState } from 'react'
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 
+import { useColorScheme } from '@/hooks/use-color-scheme'
+
+import { IconSymbol } from '@/components/ui/icon-symbol'
 import { formatDuration } from '@/lib/format'
 import { useSession } from '@/lib/session-context'
 import { getCategories, type Category } from '@/lib/sessions'
+
+const SCREEN_WIDTH = Dimensions.get('window').width
 
 type Step = 'select' | 'time-choice' | 'active' | 'summary' | 'auto-close'
 
@@ -30,9 +36,31 @@ export default function SessionScreen() {
 	} = useSession()
 
 	const [step, setStep] = useState<Step>('select')
+	const [outgoingStep, setOutgoingStep] = useState<Step | null>(null)
 	const [categories, setCategories] = useState<Category[]>([])
 	const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 	const [completedDuration, setCompletedDuration] = useState(0)
+
+	const exitX = useSharedValue(0)
+	const enterX = useSharedValue(0)
+	const exitStyle = useAnimatedStyle(() => ({ transform: [{ translateX: exitX.value }] }))
+	const enterStyle = useAnimatedStyle(() => ({ transform: [{ translateX: enterX.value }] }))
+	const initializedRef = useRef(false)
+
+	const transition = (next: Step, direction: 'forward' | 'back') => {
+		const sign = direction === 'forward' ? 1 : -1
+		setOutgoingStep(step)
+		setStep(next)
+		exitX.value = 0
+		enterX.value = sign * SCREEN_WIDTH
+		exitX.value = withTiming(-sign * SCREEN_WIDTH, { duration: 280 })
+		enterX.value = withTiming(0, { duration: 280 }, finished => {
+			if (finished) runOnJS(setOutgoingStep)(null)
+		})
+	}
+
+	const goForward = (next: Step) => transition(next, 'forward')
+	const goBack = (next: Step) => transition(next, 'back')
 
 	useEffect(() => {
 		getCategories().then(setCategories)
@@ -40,11 +68,14 @@ export default function SessionScreen() {
 
 	// Determine initial step based on session state
 	useEffect(() => {
+		if (initializedRef.current) return
 		if (needsAutoClose && activeSession) {
+			initializedRef.current = true
 			setStep('auto-close')
 			return
 		}
 		if (activeSession) {
+			initializedRef.current = true
 			setStep('active')
 			return
 		}
@@ -52,6 +83,7 @@ export default function SessionScreen() {
 			const catId = parseInt(params.category, 10)
 			const cat = categories.find(c => c.id === catId)
 			if (cat) {
+				initializedRef.current = true
 				setSelectedCategory(cat)
 				setStep('time-choice')
 				return
@@ -61,77 +93,104 @@ export default function SessionScreen() {
 
 	const handleSelectCategory = (category: Category) => {
 		setSelectedCategory(category)
-		setStep('time-choice')
+		goForward('time-choice')
 	}
 
 	const handleStartTimer = async () => {
 		if (!selectedCategory) return
 		await startSession(selectedCategory.id)
-		setStep('active')
+		goForward('active')
 	}
 
 	const handlePreset = async (seconds: number) => {
 		if (!selectedCategory) return
 		await logPreset(selectedCategory.id, seconds)
 		setCompletedDuration(seconds)
-		setStep('summary')
+		goForward('summary')
 	}
 
 	const handleStop = async () => {
 		const elapsed = elapsedSeconds
 		await stopSession()
 		setCompletedDuration(elapsed)
-		setStep('summary')
+		goForward('summary')
 	}
 
 	const handleAutoCloseContinue = () => {
 		confirmContinue()
-		setStep('active')
+		goForward('active')
 	}
 
 	const handleAutoCloseStop = async (seconds: number) => {
 		await confirmStop(seconds)
 		setCompletedDuration(seconds)
-		setStep('summary')
+		goForward('summary')
 	}
 
 	const handleDone = () => {
-		router.back()
+		router.dismiss()
 	}
 
+	const renderStepContent = (s: Step) => {
+		switch (s) {
+			case 'select':
+				return <SelectStep categories={categories} onSelect={handleSelectCategory} />
+			case 'time-choice':
+				return selectedCategory ? (
+					<TimeChoiceStep
+						category={selectedCategory}
+						onStartTimer={handleStartTimer}
+						onPreset={handlePreset}
+						onBack={() => goBack('select')}
+					/>
+				) : null
+			case 'active':
+				return activeSession ? (
+					<ActiveStep categoryName={activeSession.category_name} elapsedSeconds={elapsedSeconds} onStop={handleStop} />
+				) : null
+			case 'auto-close':
+				return activeSession ? (
+					<AutoCloseStep
+						categoryName={activeSession.category_name}
+						onContinue={handleAutoCloseContinue}
+						onStop={handleAutoCloseStop}
+					/>
+				) : null
+			case 'summary':
+				return (
+					<SummaryStep
+						categoryName={selectedCategory?.name ?? activeSession?.category_name ?? ''}
+						durationSeconds={completedDuration}
+						onDone={handleDone}
+					/>
+				)
+		}
+	}
+
+	const stepDotIndex: number | null =
+		step === 'select' ? 0 : step === 'time-choice' ? 1 : step === 'active' || step === 'auto-close' ? 2 : null
+
 	return (
-		<View className='flex-1 bg-app-bg'>
+		<View className='flex-1 bg-app-bg overflow-hidden'>
 			{/* Handle bar */}
-			<View className='items-center pt-2 pb-1'>
+			<View className='flex-row items-center pt-4 px-4'>
+				<View className='flex-1' />
 				<View className='w-9 h-1.25 rounded opacity-30 bg-app-icon' />
+				<View className='flex-1 items-end'>
+					<Pressable onPress={handleDone} className='p-2'>
+						<IconSymbol name='xmark' size={20} color='#9BA1A6' />
+					</Pressable>
+				</View>
 			</View>
 
-			{step === 'select' && <SelectStep categories={categories} onSelect={handleSelectCategory} />}
-			{step === 'time-choice' && selectedCategory && (
-				<TimeChoiceStep
-					category={selectedCategory}
-					onStartTimer={handleStartTimer}
-					onPreset={handlePreset}
-					onBack={() => setStep('select')}
-				/>
-			)}
-			{step === 'active' && activeSession && (
-				<ActiveStep categoryName={activeSession.category_name} elapsedSeconds={elapsedSeconds} onStop={handleStop} />
-			)}
-			{step === 'auto-close' && activeSession && (
-				<AutoCloseStep
-					categoryName={activeSession.category_name}
-					onContinue={handleAutoCloseContinue}
-					onStop={handleAutoCloseStop}
-				/>
-			)}
-			{step === 'summary' && (
-				<SummaryStep
-					categoryName={selectedCategory?.name ?? activeSession?.category_name ?? ''}
-					durationSeconds={completedDuration}
-					onDone={handleDone}
-				/>
-			)}
+			<View style={{ flex: 1, overflow: 'hidden' }}>
+				{outgoingStep && (
+					<Animated.View style={[StyleSheet.absoluteFill, exitStyle]}>{renderStepContent(outgoingStep)}</Animated.View>
+				)}
+				<Animated.View style={[{ flex: 1 }, enterStyle]}>{renderStepContent(step)}</Animated.View>
+			</View>
+
+			<StepDots currentStep={stepDotIndex} />
 		</View>
 	)
 }
@@ -139,11 +198,11 @@ export default function SessionScreen() {
 function SelectStep({ categories, onSelect }: { categories: Category[]; onSelect: (cat: Category) => void }) {
 	return (
 		<View className='flex-1 gap-4 p-6'>
-			<Text className='text-2xl font-bold text-app-text'>Choose a category</Text>
+			<Text className='text-3xl font-bold text-app-text'>Choose a category</Text>
 			<View className='gap-3 mt-4'>
 				{categories.map(cat => (
 					<Pressable key={cat.id} onPress={() => onSelect(cat)} className='py-4.5 px-5 rounded-xl bg-app-secondary'>
-						<Text className='text-[17px] font-semibold text-center text-white'>{cat.name}</Text>
+						<Text className='text-2xl font-semibold text-center text-white'>{cat.name}</Text>
 					</Pressable>
 				))}
 			</View>
@@ -163,29 +222,40 @@ function TimeChoiceStep({
 	onBack: () => void
 }) {
 	return (
-		<View className='flex-1 gap-4 p-6'>
-			<Pressable onPress={onBack}>
-				<Text className='text-base mb-4 text-app-primary'>← Back</Text>
-			</Pressable>
-			<Text className='text-2xl font-bold text-app-text'>{category.name}</Text>
-			<Text className='text-base mb-6 text-app-icon'>How do you want to log time?</Text>
-
-			<Pressable onPress={onStartTimer} className='py-4 rounded-xl items-center px-4 bg-app-primary'>
-				<Text className='text-white text-[17px] font-semibold'>Start Timer</Text>
-			</Pressable>
-
-			<Text className='text-center mb-4 text-sm text-app-icon'>or log a completed session</Text>
-
-			<View className='flex-row gap-2.5 flex-wrap'>
-				{PRESETS.map(p => (
-					<Pressable
-						key={p.seconds}
-						onPress={() => onPreset(p.seconds)}
-						className='flex-1 min-w-[40%] py-3.5 rounded-[10px] border border-app-border items-center bg-app-surface'
-					>
-						<Text className='text-[15px] font-medium text-app-text'>{p.label}</Text>
+		<View className='flex-1 p-6'>
+			<View className='flex-1 gap-6'>
+				{/* Header */}
+				<View className='flex-row items-center gap-3'>
+					<Pressable onPress={onBack} className='p-1 -ml-1'>
+						<Text className='text-2xl text-app-primary'>←</Text>
 					</Pressable>
-				))}
+					<Text className='text-3xl font-bold text-app-text'>{category.name}</Text>
+				</View>
+
+				{/* Preset grid */}
+				<View className='gap-3'>
+					<Text className='text-sm font-semibold uppercase tracking-widest text-app-icon mt-4'>
+						Log a completed session
+					</Text>
+					<View className='flex-row gap-2.5 flex-wrap'>
+						{PRESETS.map(p => (
+							<Pressable
+								key={p.seconds}
+								onPress={() => onPreset(p.seconds)}
+								className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-app-border items-center bg-app-surface'
+							>
+								<Text className='text-2xl font-medium text-app-text'>{p.label}</Text>
+							</Pressable>
+						))}
+					</View>
+				</View>
+			</View>
+
+			{/* Start Timer pinned to bottom */}
+			<View className='gap-3'>
+				<Pressable onPress={onStartTimer} className='rounded-xl items-center p-4 bg-app-primary'>
+					<Text className='text-white text-2xl font-semibold'>Start Timer</Text>
+				</Pressable>
 			</View>
 		</View>
 	)
@@ -201,13 +271,15 @@ function ActiveStep({
 	onStop: () => void
 }) {
 	return (
-		<View className='flex-1 gap-4 p-6 items-center justify-center'>
-			<Text className='text-xl font-semibold mb-4 text-app-icon'>{categoryName}</Text>
-			<Text className='text-[64px] font-extralight text-app-text mb-12' style={{ fontVariant: ['tabular-nums'] }}>
-				{formatDuration(elapsedSeconds)}
-			</Text>
-			<Pressable onPress={onStop} className='w-25 h-25 rounded-full items-center justify-center bg-app-primary'>
-				<Text className='text-white text-lg font-bold'>Stop</Text>
+		<View className='flex-1 p-6'>
+			<View className='flex-1 items-center justify-center gap-4'>
+				<Text className='text-2xl font-semibold text-app-icon'>{categoryName}</Text>
+				<Text className='text-[100px] font-extralight text-app-text' style={{ fontVariant: ['tabular-nums'] }}>
+					{formatDuration(elapsedSeconds)}
+				</Text>
+			</View>
+			<Pressable onPress={onStop} className='rounded-xl items-center p-4 bg-red-400'>
+				<Text className='text-white text-2xl font-semibold'>End Session</Text>
 			</Pressable>
 		</View>
 	)
@@ -230,7 +302,7 @@ function AutoCloseStep({
 			</Text>
 
 			<Pressable onPress={onContinue} className='py-4 rounded-xl items-center px-4 bg-app-primary'>
-				<Text className='text-white text-[17px] font-semibold'>Continue Session</Text>
+				<Text className='text-white text-2xl font-semibold'>Continue Session</Text>
 			</Pressable>
 
 			<Text className='text-center mb-4 text-sm text-app-icon'>or stop and estimate your time</Text>
@@ -242,7 +314,7 @@ function AutoCloseStep({
 						onPress={() => onStop(p.seconds)}
 						className='flex-1 min-w-[40%] py-3.5 rounded-[10px] border border-app-border items-center bg-app-surface'
 					>
-						<Text className='text-[15px] font-medium text-app-text'>{p.label}</Text>
+						<Text className='text-2xl font-medium text-app-text'>{p.label}</Text>
 					</Pressable>
 				))}
 			</View>
@@ -259,18 +331,67 @@ function SummaryStep({
 	durationSeconds: number
 	onDone: () => void
 }) {
+	const colorScheme = useColorScheme()
+	const primaryColor = colorScheme === 'dark' ? '#4a90d9' : '#1e3a5f'
+
 	return (
-		<View className='flex-1 gap-4 p-6 items-center justify-center'>
-			<Text className='text-2xl font-bold text-app-text'>Session logged</Text>
-			<View className='py-6 px-8 rounded-2xl items-center bg-app-primary'>
-				<Text className='text-white text-lg font-semibold mb-1'>{categoryName}</Text>
-				<Text className='text-white text-[36px] font-light' style={{ fontVariant: ['tabular-nums'] }}>
-					{formatDuration(durationSeconds)}
-				</Text>
+		<View className='flex-1 p-6'>
+			<View className='flex-1 items-center justify-center gap-8'>
+				<View className='items-center gap-3'>
+					<IconSymbol name='checkmark.circle.fill' size={72} color={primaryColor} />
+					<Text className='text-2xl font-bold text-app-text'>Session logged!</Text>
+				</View>
+				<View className='w-full rounded-2xl p-8 items-center gap-1 bg-app-surface border border-app-border'>
+					<Text className='font-semibold uppercase tracking-widest text-app-icon'>{categoryName}</Text>
+					<Text className='text-[64px] font-extralight text-app-text' style={{ fontVariant: ['tabular-nums'] }}>
+						{formatDuration(durationSeconds)}
+					</Text>
+				</View>
 			</View>
-			<Pressable onPress={onDone} className='py-4 rounded-xl items-center px-4 bg-app-primary self-stretch'>
-				<Text className='text-white text-[17px] font-semibold'>Done</Text>
+			<Pressable onPress={onDone} className='p-4 rounded-xl items-center bg-app-primary'>
+				<Text className='text-white text-2xl font-semibold'>Done</Text>
 			</Pressable>
 		</View>
 	)
+}
+
+const TOTAL_STEPS = 3
+
+function StepDots({ currentStep }: { currentStep: number | null }) {
+	return (
+		<View
+			style={{
+				flexDirection: 'row',
+				gap: 6,
+				justifyContent: 'center',
+				paddingBottom: 28,
+				paddingTop: 8,
+				opacity: currentStep !== null ? 1 : 0,
+			}}
+		>
+			{Array.from({ length: TOTAL_STEPS }, (_, i) => (
+				<AnimatedDot key={i} active={i === currentStep} />
+			))}
+		</View>
+	)
+}
+
+function AnimatedDot({ active }: { active: boolean }) {
+	const colorScheme = useColorScheme()
+	const color = colorScheme === 'dark' ? '#4a90d9' : '#1e3a5f'
+
+	const width = useSharedValue(active ? 20 : 8)
+	const opacity = useSharedValue(active ? 1 : 0.35)
+
+	useEffect(() => {
+		width.value = withSpring(active ? 20 : 8, { damping: 40, stiffness: 500 })
+		opacity.value = withTiming(active ? 1 : 0.35, { duration: 100 })
+	}, [active, width, opacity])
+
+	const animatedStyle = useAnimatedStyle(() => ({
+		width: width.value,
+		opacity: opacity.value,
+	}))
+
+	return <Animated.View style={[animatedStyle, { height: 8, borderRadius: 4, backgroundColor: color }]} />
 }
