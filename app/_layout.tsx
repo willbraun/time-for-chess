@@ -9,7 +9,6 @@ import './../global.css'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 import { getDatabase } from '@/lib/database'
 import { SessionProvider } from '@/lib/session-context'
-import { VariableContextProvider } from 'nativewind'
 
 export const unstable_settings = {
 	anchor: '(tabs)',
@@ -28,22 +27,20 @@ export default function RootLayout() {
 	return (
 		<GestureHandlerRootView className='flex-1'>
 			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-				<VariableContextProvider value={{ '--app-tint': colorScheme === 'dark' ? '#ffffff' : '#0a7ea4' }}>
-					<SessionProvider>
-						<Stack>
-							<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-							<Stack.Screen
-								name='session'
-								options={{
-									presentation: 'modal',
-									title: 'Session',
-									headerShown: false,
-								}}
-							/>
-						</Stack>
-						<StatusBar style='auto' />
-					</SessionProvider>
-				</VariableContextProvider>
+				<SessionProvider>
+					<Stack>
+						<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+						<Stack.Screen
+							name='session'
+							options={{
+								presentation: 'modal',
+								title: 'Session',
+								headerShown: false,
+							}}
+						/>
+					</Stack>
+					<StatusBar style='auto' />
+				</SessionProvider>
 			</ThemeProvider>
 		</GestureHandlerRootView>
 	)

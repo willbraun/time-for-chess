@@ -72,28 +72,28 @@ export default function HistoryScreen() {
 	const sections = groupByDay(sessions)
 
 	return (
-		<View className='flex-1 bg-app-bg'>
+		<View className='flex-1 bg-background'>
 			<SectionList
 				sections={sections}
 				keyExtractor={item => String(item.id)}
-				contentContainerStyle={{ paddingBottom: 32, paddingTop: insets.top + 16 }}
+				contentContainerStyle={{ paddingBottom: 84, paddingTop: insets.top + 16 }}
 				ListHeaderComponent={
 					<View className='mb-2 px-5'>
-						<Text className='text-[28px] font-bold mb-4 text-app-text'>History</Text>
-						<View className='flex-row rounded-xl p-4 mb-2 bg-app-surface'>
+						<Text className='text-4xl font-bold mb-4 text-foreground'>History</Text>
+						<View className='flex-row rounded-2xl p-4 mb-2 bg-card'>
 							<View className='flex-1 items-center'>
-								<Text className='text-[22px] font-bold text-app-text'>{formatDurationMinutes(totalSeconds)}</Text>
-								<Text className='text-[13px] mt-0.5 text-app-icon'>Total (30d)</Text>
+								<Text className='text-[22px] font-bold text-foreground'>{formatDurationMinutes(totalSeconds)}</Text>
+								<Text className='text-[13px] mt-0.5 text-muted-foreground'>Total (30d)</Text>
 							</View>
 							<View className='flex-1 items-center'>
-								<Text className='text-[22px] font-bold text-app-text'>{sessions.length}</Text>
-								<Text className='text-[13px] mt-0.5 text-app-icon'>Sessions</Text>
+								<Text className='text-[22px] font-bold text-foreground'>{sessions.length}</Text>
+								<Text className='text-[13px] mt-0.5 text-muted-foreground'>Sessions</Text>
 							</View>
 						</View>
 					</View>
 				}
 				renderSectionHeader={({ section }) => (
-					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 px-5 text-app-icon bg-app-bg'>
+					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 px-5 text-muted-foreground bg-background'>
 						{section.title}
 					</Text>
 				)}
@@ -108,23 +108,26 @@ export default function HistoryScreen() {
 						renderRightActions={() => renderRightActions(item.id)}
 						rightThreshold={40}
 					>
-						<View className='flex-row items-center py-3 px-5 border-b border-app-border bg-app-bg'>
-							<View className='flex-1'>
-								<Text className='text-[15px] font-medium text-app-text'>{item.category_name}</Text>
-								<Text className='text-[13px] mt-0.5 text-app-icon'>
-									{formatTime(item.start_time)}
-									{item.status === 'auto_closed' ? ' · auto-closed' : ''}
+						<View className='bg-background'>
+							<View className='flex-row items-center py-3 px-5'>
+								<View className='flex-1'>
+									<Text className='text-[15px] font-medium text-foreground'>{item.category_name}</Text>
+									<Text className='text-[13px] mt-0.5 text-muted-foreground'>
+										{formatTime(item.start_time)}
+										{item.status === 'auto_closed' ? ' · auto-closed' : ''}
+									</Text>
+								</View>
+								<Text className='text-[15px] font-semibold text-foreground' style={{ fontVariant: ['tabular-nums'] }}>
+									{formatDurationMinutes(item.duration_seconds ?? 0)}
 								</Text>
 							</View>
-							<Text className='text-[15px] font-semibold text-app-text' style={{ fontVariant: ['tabular-nums'] }}>
-								{formatDurationMinutes(item.duration_seconds ?? 0)}
-							</Text>
+							<View className='h-px bg-border mx-5' />
 						</View>
 					</Swipeable>
 				)}
 				ListEmptyComponent={
 					<View className='items-center pt-15 px-5'>
-						<Text className='text-base text-app-icon'>No sessions yet. Start your first one!</Text>
+						<Text className='text-base text-muted-foreground'>No sessions yet. Start your first one!</Text>
 					</View>
 				}
 			/>

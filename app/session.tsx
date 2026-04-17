@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 
-import { useColorScheme } from '@/hooks/use-color-scheme'
-
 import { IconSymbol } from '@/components/ui/icon-symbol'
+import { useColorToken } from '@/hooks/use-color-token'
 import { formatDuration } from '@/lib/format'
 import { useSession } from '@/lib/session-context'
 import { getCategories, type Category } from '@/lib/sessions'
@@ -169,16 +168,17 @@ export default function SessionScreen() {
 
 	const stepDotIndex: number | null =
 		step === 'select' ? 0 : step === 'time-choice' ? 1 : step === 'active' || step === 'auto-close' ? 2 : null
+	const mutedForegroundColor = useColorToken('--muted-foreground')
 
 	return (
-		<View className='flex-1 bg-app-bg overflow-hidden'>
+		<View className='flex-1 bg-background overflow-hidden'>
 			{/* Handle bar */}
 			<View className='flex-row items-center pt-4 px-4'>
 				<View className='flex-1' />
-				<View className='w-9 h-1.25 rounded opacity-30 bg-app-icon' />
+				<View className='w-9 h-1.25 rounded opacity-30 bg-muted-foreground' />
 				<View className='flex-1 items-end'>
 					<Pressable onPress={handleDone} className='p-2'>
-						<IconSymbol name='xmark' size={20} color='#9BA1A6' />
+						<IconSymbol name='xmark' size={20} color={mutedForegroundColor} />
 					</Pressable>
 				</View>
 			</View>
@@ -198,10 +198,10 @@ export default function SessionScreen() {
 function SelectStep({ categories, onSelect }: { categories: Category[]; onSelect: (cat: Category) => void }) {
 	return (
 		<View className='flex-1 gap-4 p-6'>
-			<Text className='text-3xl font-bold text-app-text'>Choose a category</Text>
+			<Text className='text-3xl font-bold text-foreground'>Choose a category</Text>
 			<View className='gap-3 mt-4'>
 				{categories.map(cat => (
-					<Pressable key={cat.id} onPress={() => onSelect(cat)} className='py-4.5 px-5 rounded-xl bg-app-secondary'>
+					<Pressable key={cat.id} onPress={() => onSelect(cat)} className='py-4.5 px-5 rounded-xl bg-secondary'>
 						<Text className='text-2xl font-semibold text-center text-white'>{cat.name}</Text>
 					</Pressable>
 				))}
@@ -227,14 +227,14 @@ function TimeChoiceStep({
 				{/* Header */}
 				<View className='flex-row items-center gap-3'>
 					<Pressable onPress={onBack} className='p-1 -ml-1'>
-						<Text className='text-2xl text-app-primary'>←</Text>
+						<Text className='text-2xl text-primary'>←</Text>
 					</Pressable>
-					<Text className='text-3xl font-bold text-app-text'>{category.name}</Text>
+					<Text className='text-3xl font-bold text-foreground'>{category.name}</Text>
 				</View>
 
 				{/* Preset grid */}
 				<View className='gap-3'>
-					<Text className='text-sm font-semibold uppercase tracking-widest text-app-icon mt-4'>
+					<Text className='text-sm font-semibold uppercase tracking-widest text-muted-foreground mt-4'>
 						Log a completed session
 					</Text>
 					<View className='flex-row gap-2.5 flex-wrap'>
@@ -242,9 +242,9 @@ function TimeChoiceStep({
 							<Pressable
 								key={p.seconds}
 								onPress={() => onPreset(p.seconds)}
-								className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-app-border items-center bg-app-surface'
+								className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-border items-center bg-card'
 							>
-								<Text className='text-2xl font-medium text-app-text'>{p.label}</Text>
+								<Text className='text-2xl font-medium text-foreground'>{p.label}</Text>
 							</Pressable>
 						))}
 					</View>
@@ -253,7 +253,7 @@ function TimeChoiceStep({
 
 			{/* Start Timer pinned to bottom */}
 			<View className='gap-3'>
-				<Pressable onPress={onStartTimer} className='rounded-xl items-center p-4 bg-app-primary'>
+				<Pressable onPress={onStartTimer} className='rounded-full items-center p-4 bg-primary'>
 					<Text className='text-white text-2xl font-semibold'>Start Timer</Text>
 				</Pressable>
 			</View>
@@ -273,12 +273,12 @@ function ActiveStep({
 	return (
 		<View className='flex-1 p-6'>
 			<View className='flex-1 items-center justify-center gap-4'>
-				<Text className='text-2xl font-semibold text-app-icon'>{categoryName}</Text>
-				<Text className='text-[100px] font-extralight text-app-text' style={{ fontVariant: ['tabular-nums'] }}>
+				<Text className='text-2xl font-semibold text-muted-foreground'>{categoryName}</Text>
+				<Text className='text-[100px] font-extralight text-foreground' style={{ fontVariant: ['tabular-nums'] }}>
 					{formatDuration(elapsedSeconds)}
 				</Text>
 			</View>
-			<Pressable onPress={onStop} className='rounded-xl items-center p-4 bg-red-400'>
+			<Pressable onPress={onStop} className='rounded-full items-center p-4 bg-primary'>
 				<Text className='text-white text-2xl font-semibold'>End Session</Text>
 			</Pressable>
 		</View>
@@ -296,25 +296,25 @@ function AutoCloseStep({
 }) {
 	return (
 		<View className='flex-1 gap-4 p-6'>
-			<Text className='text-2xl font-bold text-app-text'>Session still open</Text>
-			<Text className='text-base mb-6 text-app-icon'>
+			<Text className='text-2xl font-bold text-foreground'>Session still open</Text>
+			<Text className='text-base mb-6 text-muted-foreground'>
 				Your {categoryName} session has been running for over an hour.
 			</Text>
 
-			<Pressable onPress={onContinue} className='py-4 rounded-xl items-center px-4 bg-app-primary'>
+			<Pressable onPress={onContinue} className='py-4 rounded-xl items-center px-4 bg-primary'>
 				<Text className='text-white text-2xl font-semibold'>Continue Session</Text>
 			</Pressable>
 
-			<Text className='text-center mb-4 text-sm text-app-icon'>or stop and estimate your time</Text>
+			<Text className='text-center mb-4 text-sm text-muted-foreground'>or stop and estimate your time</Text>
 
 			<View className='flex-row gap-2.5 flex-wrap'>
 				{PRESETS.map(p => (
 					<Pressable
 						key={p.seconds}
 						onPress={() => onStop(p.seconds)}
-						className='flex-1 min-w-[40%] py-3.5 rounded-[10px] border border-app-border items-center bg-app-surface'
+						className='flex-1 min-w-[40%] py-3.5 rounded-[10px] border border-border items-center bg-card'
 					>
-						<Text className='text-2xl font-medium text-app-text'>{p.label}</Text>
+						<Text className='text-2xl font-medium text-foreground'>{p.label}</Text>
 					</Pressable>
 				))}
 			</View>
@@ -331,24 +331,23 @@ function SummaryStep({
 	durationSeconds: number
 	onDone: () => void
 }) {
-	const colorScheme = useColorScheme()
-	const primaryColor = colorScheme === 'dark' ? '#4a90d9' : '#1e3a5f'
+	const primaryColor = useColorToken('--primary')
 
 	return (
 		<View className='flex-1 p-6'>
 			<View className='flex-1 items-center justify-center gap-8'>
 				<View className='items-center gap-3'>
 					<IconSymbol name='checkmark.circle.fill' size={72} color={primaryColor} />
-					<Text className='text-2xl font-bold text-app-text'>Session logged!</Text>
+					<Text className='text-2xl font-bold text-foreground'>Session logged!</Text>
 				</View>
-				<View className='w-full rounded-2xl p-8 items-center gap-1 bg-app-surface border border-app-border'>
-					<Text className='font-semibold uppercase tracking-widest text-app-icon'>{categoryName}</Text>
-					<Text className='text-[64px] font-extralight text-app-text' style={{ fontVariant: ['tabular-nums'] }}>
+				<View className='w-full rounded-2xl p-8 items-center gap-1 bg-card border border-border'>
+					<Text className='font-semibold uppercase tracking-widest text-muted-foreground'>{categoryName}</Text>
+					<Text className='text-[100px] font-extralight text-foreground' style={{ fontVariant: ['tabular-nums'] }}>
 						{formatDuration(durationSeconds)}
 					</Text>
 				</View>
 			</View>
-			<Pressable onPress={onDone} className='p-4 rounded-xl items-center bg-app-primary'>
+			<Pressable onPress={onDone} className='p-4 rounded-full items-center bg-primary'>
 				<Text className='text-white text-2xl font-semibold'>Done</Text>
 			</Pressable>
 		</View>
@@ -377,8 +376,7 @@ function StepDots({ currentStep }: { currentStep: number | null }) {
 }
 
 function AnimatedDot({ active }: { active: boolean }) {
-	const colorScheme = useColorScheme()
-	const color = colorScheme === 'dark' ? '#4a90d9' : '#1e3a5f'
+	const color = useColorToken('--primary')
 
 	const width = useSharedValue(active ? 20 : 8)
 	const opacity = useSharedValue(active ? 1 : 0.35)
