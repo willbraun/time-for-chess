@@ -14,11 +14,11 @@ export function SessionBar() {
 	return (
 		<Pressable
 			onPress={() => router.push('/session' as any)}
-			className='flex-row items-center justify-center px-4 gap-4 h-15 bg-primary'
+			className='flex-row items-center justify-center px-4 gap-4 h-15 bg-accent'
 		>
 			<Text className='text-white text-xl font-semibold'>{activeSession.category_name}</Text>
 			<Text
-				className='text-white bg-background/20 px-2 py-1 rounded text-xl font-bold'
+				className='text-white bg-primary/20 px-2 py-1 rounded text-xl font-bold'
 				style={{ fontVariant: ['tabular-nums'] }}
 			>
 				{formatDuration(elapsedSeconds)}
@@ -47,7 +47,7 @@ export function SessionFAB() {
 		>
 			<Pressable
 				onPress={() => router.push('/session' as any)}
-				className='bg-primary rounded-full px-8 py-4'
+				className='bg-accent rounded-full px-8 py-4 shadow-xl'
 				style={{
 					elevation: 8,
 					width: '90%',

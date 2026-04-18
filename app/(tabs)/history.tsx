@@ -72,28 +72,28 @@ export default function HistoryScreen() {
 	const sections = groupByDay(sessions)
 
 	return (
-		<View className='flex-1 bg-background'>
+		<View className='flex-1 bg-primary'>
 			<SectionList
 				sections={sections}
 				keyExtractor={item => String(item.id)}
 				contentContainerStyle={{ paddingBottom: 84, paddingTop: insets.top + 16 }}
 				ListHeaderComponent={
 					<View className='mb-2 px-5'>
-						<Text className='text-4xl font-bold mb-4 text-foreground'>History</Text>
-						<View className='flex-row rounded-2xl p-4 mb-2 bg-card'>
+						<Text className='text-4xl font-bold mb-4 text-fg-primary'>History</Text>
+						<View className='flex-row rounded-2xl p-4 mb-2 bg-surface'>
 							<View className='flex-1 items-center'>
-								<Text className='text-[22px] font-bold text-foreground'>{formatDurationMinutes(totalSeconds)}</Text>
-								<Text className='text-[13px] mt-0.5 text-muted-foreground'>Total (30d)</Text>
+								<Text className='text-[22px] font-bold text-fg-primary'>{formatDurationMinutes(totalSeconds)}</Text>
+								<Text className='text-[13px] mt-0.5 text-fg-muted'>Total (30d)</Text>
 							</View>
 							<View className='flex-1 items-center'>
-								<Text className='text-[22px] font-bold text-foreground'>{sessions.length}</Text>
-								<Text className='text-[13px] mt-0.5 text-muted-foreground'>Sessions</Text>
+								<Text className='text-[22px] font-bold text-fg-primary'>{sessions.length}</Text>
+								<Text className='text-[13px] mt-0.5 text-fg-muted'>Sessions</Text>
 							</View>
 						</View>
 					</View>
 				}
 				renderSectionHeader={({ section }) => (
-					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 px-5 text-muted-foreground bg-background'>
+					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 px-5 text-fg-muted bg-primary'>
 						{section.title}
 					</Text>
 				)}
@@ -108,16 +108,16 @@ export default function HistoryScreen() {
 						renderRightActions={() => renderRightActions(item.id)}
 						rightThreshold={40}
 					>
-						<View className='bg-background'>
+						<View className='bg-primary'>
 							<View className='flex-row items-center py-3 px-5'>
 								<View className='flex-1'>
-									<Text className='text-[15px] font-medium text-foreground'>{item.category_name}</Text>
-									<Text className='text-[13px] mt-0.5 text-muted-foreground'>
+									<Text className='text-[15px] font-medium text-fg-primary'>{item.category_name}</Text>
+									<Text className='text-[13px] mt-0.5 text-fg-muted'>
 										{formatTime(item.start_time)}
 										{item.status === 'auto_closed' ? ' · auto-closed' : ''}
 									</Text>
 								</View>
-								<Text className='text-[15px] font-semibold text-foreground' style={{ fontVariant: ['tabular-nums'] }}>
+								<Text className='text-[15px] font-semibold text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
 									{formatDurationMinutes(item.duration_seconds ?? 0)}
 								</Text>
 							</View>
@@ -127,7 +127,7 @@ export default function HistoryScreen() {
 				)}
 				ListEmptyComponent={
 					<View className='items-center pt-15 px-5'>
-						<Text className='text-base text-muted-foreground'>No sessions yet. Start your first one!</Text>
+						<Text className='text-base text-fg-muted'>No sessions yet. Start your first one!</Text>
 					</View>
 				}
 			/>

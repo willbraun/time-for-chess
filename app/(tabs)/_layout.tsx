@@ -9,8 +9,8 @@ import { SessionBar, SessionFAB } from '@/components/session-bar'
 import { IconSymbol } from '@/components/ui/icon-symbol'
 
 export default function TabLayout() {
-	const tint = useColorToken('--primary')
-	const icon = useColorToken('--muted-foreground')
+	const tint = useColorToken('--accent')
+	const icon = useColorToken('--fg-secondary')
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -23,7 +23,7 @@ export default function TabLayout() {
 				tabBar={props => (
 					<View>
 						<SessionBar />
-						<View className='h-24 flex-row bg-secondary'>
+						<View className='h-24 flex-row bg-secondary border-t-2 border-border'>
 							{props.state.routes.map((route, index) => {
 								const { options } = props.descriptors[route.key]
 								const isFocused = props.state.index === index

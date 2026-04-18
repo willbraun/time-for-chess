@@ -168,14 +168,14 @@ export default function SessionScreen() {
 
 	const stepDotIndex: number | null =
 		step === 'select' ? 0 : step === 'time-choice' ? 1 : step === 'active' || step === 'auto-close' ? 2 : null
-	const mutedForegroundColor = useColorToken('--muted-foreground')
+	const mutedForegroundColor = useColorToken('--fg-muted')
 
 	return (
-		<View className='flex-1 bg-background overflow-hidden'>
+		<View className='flex-1 bg-primary overflow-hidden'>
 			{/* Handle bar */}
 			<View className='flex-row items-center pt-4 px-4'>
 				<View className='flex-1' />
-				<View className='w-9 h-1.25 rounded opacity-30 bg-muted-foreground' />
+				<View className='w-9 h-1.25 rounded opacity-30 bg-fg-muted' />
 				<View className='flex-1 items-end'>
 					<Pressable onPress={handleDone} className='p-2'>
 						<IconSymbol name='xmark' size={20} color={mutedForegroundColor} />
@@ -198,7 +198,7 @@ export default function SessionScreen() {
 function SelectStep({ categories, onSelect }: { categories: Category[]; onSelect: (cat: Category) => void }) {
 	return (
 		<View className='flex-1 gap-4 p-6'>
-			<Text className='text-3xl font-bold text-foreground'>Choose a category</Text>
+			<Text className='text-3xl font-bold text-fg-primary'>Choose a category</Text>
 			<View className='gap-3 mt-4'>
 				{categories.map(cat => (
 					<Pressable key={cat.id} onPress={() => onSelect(cat)} className='py-4.5 px-5 rounded-xl bg-secondary'>
@@ -227,14 +227,14 @@ function TimeChoiceStep({
 				{/* Header */}
 				<View className='flex-row items-center gap-3'>
 					<Pressable onPress={onBack} className='p-1 -ml-1'>
-						<Text className='text-2xl text-primary'>←</Text>
+						<Text className='text-2xl text-accent'>←</Text>
 					</Pressable>
-					<Text className='text-3xl font-bold text-foreground'>{category.name}</Text>
+					<Text className='text-3xl font-bold text-fg-primary'>{category.name}</Text>
 				</View>
 
 				{/* Preset grid */}
 				<View className='gap-3'>
-					<Text className='text-sm font-semibold uppercase tracking-widest text-muted-foreground mt-4'>
+					<Text className='text-sm font-semibold uppercase tracking-widest text-fg-muted mt-4'>
 						Log a completed session
 					</Text>
 					<View className='flex-row gap-2.5 flex-wrap'>
@@ -242,9 +242,9 @@ function TimeChoiceStep({
 							<Pressable
 								key={p.seconds}
 								onPress={() => onPreset(p.seconds)}
-								className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-border items-center bg-card'
+								className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-border items-center bg-surface'
 							>
-								<Text className='text-2xl font-medium text-foreground'>{p.label}</Text>
+								<Text className='text-2xl font-medium text-fg-primary'>{p.label}</Text>
 							</Pressable>
 						))}
 					</View>
@@ -253,7 +253,7 @@ function TimeChoiceStep({
 
 			{/* Start Timer pinned to bottom */}
 			<View className='gap-3'>
-				<Pressable onPress={onStartTimer} className='rounded-full items-center p-4 bg-primary'>
+				<Pressable onPress={onStartTimer} className='rounded-full items-center p-4 bg-accent'>
 					<Text className='text-white text-2xl font-semibold'>Start Timer</Text>
 				</Pressable>
 			</View>
@@ -273,12 +273,12 @@ function ActiveStep({
 	return (
 		<View className='flex-1 p-6'>
 			<View className='flex-1 items-center justify-center gap-4'>
-				<Text className='text-2xl font-semibold text-muted-foreground'>{categoryName}</Text>
-				<Text className='text-[100px] font-extralight text-foreground' style={{ fontVariant: ['tabular-nums'] }}>
+				<Text className='text-2xl font-semibold text-fg-muted'>{categoryName}</Text>
+				<Text className='text-[100px] font-extralight text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
 					{formatDuration(elapsedSeconds)}
 				</Text>
 			</View>
-			<Pressable onPress={onStop} className='rounded-full items-center p-4 bg-primary'>
+			<Pressable onPress={onStop} className='rounded-full items-center p-4 bg-accent'>
 				<Text className='text-white text-2xl font-semibold'>End Session</Text>
 			</Pressable>
 		</View>
@@ -296,25 +296,25 @@ function AutoCloseStep({
 }) {
 	return (
 		<View className='flex-1 gap-4 p-6'>
-			<Text className='text-2xl font-bold text-foreground'>Session still open</Text>
-			<Text className='text-base mb-6 text-muted-foreground'>
+			<Text className='text-2xl font-bold text-fg-primary'>Session still open</Text>
+			<Text className='text-base mb-6 text-fg-muted'>
 				Your {categoryName} session has been running for over an hour.
 			</Text>
 
-			<Pressable onPress={onContinue} className='py-4 rounded-xl items-center px-4 bg-primary'>
+			<Pressable onPress={onContinue} className='py-4 rounded-xl items-center px-4 bg-accent'>
 				<Text className='text-white text-2xl font-semibold'>Continue Session</Text>
 			</Pressable>
 
-			<Text className='text-center mb-4 text-sm text-muted-foreground'>or stop and estimate your time</Text>
+			<Text className='text-center mb-4 text-sm text-fg-muted'>or stop and estimate your time</Text>
 
 			<View className='flex-row gap-2.5 flex-wrap'>
 				{PRESETS.map(p => (
 					<Pressable
 						key={p.seconds}
 						onPress={() => onStop(p.seconds)}
-						className='flex-1 min-w-[40%] py-3.5 rounded-[10px] border border-border items-center bg-card'
+						className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-border items-center bg-surface'
 					>
-						<Text className='text-2xl font-medium text-foreground'>{p.label}</Text>
+						<Text className='text-2xl font-medium text-fg-primary'>{p.label}</Text>
 					</Pressable>
 				))}
 			</View>
@@ -331,23 +331,23 @@ function SummaryStep({
 	durationSeconds: number
 	onDone: () => void
 }) {
-	const primaryColor = useColorToken('--primary')
+	const primaryColor = useColorToken('--accent')
 
 	return (
 		<View className='flex-1 p-6'>
 			<View className='flex-1 items-center justify-center gap-8'>
 				<View className='items-center gap-3'>
 					<IconSymbol name='checkmark.circle.fill' size={72} color={primaryColor} />
-					<Text className='text-2xl font-bold text-foreground'>Session logged!</Text>
+					<Text className='text-2xl font-bold text-fg-primary'>Session logged!</Text>
 				</View>
-				<View className='w-full rounded-2xl p-8 items-center gap-1 bg-card border border-border'>
-					<Text className='font-semibold uppercase tracking-widest text-muted-foreground'>{categoryName}</Text>
-					<Text className='text-[100px] font-extralight text-foreground' style={{ fontVariant: ['tabular-nums'] }}>
+				<View className='w-full rounded-2xl p-8 items-center gap-1 bg-surface border border-border'>
+					<Text className='font-semibold uppercase tracking-widest text-fg-muted'>{categoryName}</Text>
+					<Text className='text-[100px] font-extralight text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
 						{formatDuration(durationSeconds)}
 					</Text>
 				</View>
 			</View>
-			<Pressable onPress={onDone} className='p-4 rounded-full items-center bg-primary'>
+			<Pressable onPress={onDone} className='p-4 rounded-full items-center bg-accent'>
 				<Text className='text-white text-2xl font-semibold'>Done</Text>
 			</Pressable>
 		</View>
@@ -376,7 +376,7 @@ function StepDots({ currentStep }: { currentStep: number | null }) {
 }
 
 function AnimatedDot({ active }: { active: boolean }) {
-	const color = useColorToken('--primary')
+	const color = useColorToken('--accent')
 
 	const width = useSharedValue(active ? 20 : 8)
 	const opacity = useSharedValue(active ? 1 : 0.35)

@@ -129,3 +129,73 @@ export async function deleteSession(sessionId: number): Promise<void> {
 	const db = await getDatabase()
 	await db.runAsync('DELETE FROM sessions WHERE id = ?', [sessionId])
 }
+
+export async function getWeekSessionDays(): Promise<boolean[]> {
+	const db = await getDatabase()
+	const now = new Date()
+	const sunday = new Date(now)
+	sunday.setDate(now.getDate() - now.getDay())
+	sunday.setHours(0, 0, 0, 0)
+	const sundayTs = Math.floor(sunday.getTime() / 1000)
+
+	const nextSunday = new Date(sunday)
+	nextSunday.setDate(sunday.getDate() + 7)
+	const nextSundayTs = Math.floor(nextSunday.getTime() / 1000)
+
+	const rows = await db.getAllAsync<{ start_time: number }>(
+		`SELECT start_time FROM sessions
+		 WHERE status IN ('completed', 'auto_closed')
+		   AND start_time >= ? AND start_time < ?`,
+		[sundayTs, nextSundayTs],
+	)
+
+	const filledDays = new Set<number>()
+	for (const row of rows) {
+		filledDays.add(new Date(row.start_time * 1000).getDay())
+	}
+
+	return Array.from({ length: 7 }, (_, i) => filledDays.has(i))
+}
+
+export async function getCurrentStreak(): Promise<number> {
+	const db = await getDatabase()
+
+	const yearAgo = new Date()
+	yearAgo.setFullYear(yearAgo.getFullYear() - 1)
+	const yearAgoTs = Math.floor(yearAgo.getTime() / 1000)
+
+	const rows = await db.getAllAsync<{ start_time: number }>(
+		`SELECT start_time FROM sessions
+		 WHERE status IN ('completed', 'auto_closed')
+		   AND start_time >= ?`,
+		[yearAgoTs],
+	)
+
+	const daysWithSessions = new Set<string>()
+	for (const row of rows) {
+		const d = new Date(row.start_time * 1000)
+		daysWithSessions.add(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`)
+	}
+
+	const today = new Date()
+	const checkDate = new Date(today)
+	checkDate.setHours(0, 0, 0, 0)
+
+	const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`
+	if (!daysWithSessions.has(todayKey)) {
+		checkDate.setDate(checkDate.getDate() - 1)
+	}
+
+	let streak = 0
+	for (let i = 0; i < 366; i++) {
+		const key = `${checkDate.getFullYear()}-${checkDate.getMonth()}-${checkDate.getDate()}`
+		if (daysWithSessions.has(key)) {
+			streak++
+			checkDate.setDate(checkDate.getDate() - 1)
+		} else {
+			break
+		}
+	}
+
+	return streak
+}

@@ -1,3 +1,4 @@
+import { useColorToken } from '@/hooks/use-color-token'
 import type { CategoryDistribution } from '@/lib/recommendation'
 import { Text, View } from 'react-native'
 
@@ -8,9 +9,10 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 	const bandHighPct = data.bandHigh * 100
 
 	const isUnder = data.actual < data.bandLow
+	const successColor = useColorToken('--success')
 
 	function getDotColor(): string {
-		if (data.actual >= data.bandLow) return '#22c55e'
+		if (data.actual >= data.bandLow) return successColor
 		// Sweep hue from 60° (yellow) to 0° (red) as score increases
 		const hue = (1 - Math.min(1, data.score)) * 60
 		return `hsl(${hue},90%,45%)`
@@ -19,15 +21,15 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 	return (
 		<View className='mb-4'>
 			<View className='flex-row justify-between items-center mb-1.5'>
-				<Text className=' font-medium text-foreground'>{data.name}</Text>
+				<Text className=' font-medium text-fg-primary'>{data.name}</Text>
 				<Text
-					className={` font-semibold ${isUnder ? 'text-accent' : 'text-muted-foreground'}`}
+					className={` font-semibold ${isUnder ? 'text-warning' : 'text-fg-muted'}`}
 					style={{ fontVariant: ['tabular-nums'], color: getDotColor() }}
 				>
-					{actualPct}%<Text className='font-normal text-[13px] text-muted-foreground'> / {targetPct}%</Text>
+					{actualPct}%<Text className='font-normal text-[13px] text-fg-muted'> / {targetPct}%</Text>
 				</Text>
 			</View>
-			<View className='h-10 rounded bg-card' style={{ position: 'relative', overflow: 'visible' }}>
+			<View className='h-10 rounded bg-surface' style={{ position: 'relative', overflow: 'visible' }}>
 				{/* Band range */}
 				<View
 					className='absolute top-0 h-full bg-black/8 dark:bg-white/20'
