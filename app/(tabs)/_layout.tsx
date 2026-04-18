@@ -1,12 +1,10 @@
-import { Tabs } from 'expo-router'
-import React from 'react'
-import { Text, View } from 'react-native'
-
-import { useColorToken } from '@/hooks/use-color-token'
-
 import { HapticTab } from '@/components/haptic-tab'
 import { SessionBar, SessionFAB } from '@/components/session-bar'
-import { IconSymbol } from '@/components/ui/icon-symbol'
+import { useColorToken } from '@/hooks/use-color-token'
+import { Tabs } from 'expo-router'
+import { History, Home } from 'lucide-react-native'
+import React from 'react'
+import { Text, View } from 'react-native'
 
 export default function TabLayout() {
 	const tint = useColorToken('--accent')
@@ -51,7 +49,7 @@ export default function TabLayout() {
 										})}
 										<Text
 											style={{
-												color: isFocused ? tint : icon,
+												color: isFocused ? 'white' : icon,
 												fontSize: 12,
 												fontWeight: isFocused ? '600' : '400',
 											}}
@@ -69,14 +67,24 @@ export default function TabLayout() {
 					name='index'
 					options={{
 						title: 'Home',
-						tabBarIcon: ({ color, size }) => <IconSymbol size={size} name='house.fill' color={color} />,
+						tabBarIcon: ({ color, size, focused }) =>
+							focused ? (
+								<View style={{ width: size, height: size }}>
+									<Home size={size} color={color} fill={color} strokeWidth={1.5} />
+									<Home size={size} color='#fff' style={{ position: 'absolute', top: 0, left: 0 }} strokeWidth={1.5} />
+								</View>
+							) : (
+								<Home size={size} color={color} strokeWidth={1.5} />
+							),
 					}}
 				/>
 				<Tabs.Screen
 					name='history'
 					options={{
 						title: 'History',
-						tabBarIcon: ({ color, size }) => <IconSymbol size={size} name='clock.fill' color={color} />,
+						tabBarIcon: ({ color, size, focused }) => (
+							<History size={size} color={focused ? '#fff' : color} fill={focused ? color : 'none'} strokeWidth={1.5} />
+						),
 					}}
 				/>
 			</Tabs>

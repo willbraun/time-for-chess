@@ -39,9 +39,9 @@
 		--surface-raised: hsl(0 0% 24%);
 
 		/* Secondary (30%) */
-		--secondary: hsl(0 0% 18%);
+		--secondary: hsl(0 0% 22%);
 		--secondary-foreground: hsl(0 0% 92%);
-		--border: hsl(0 0% 22%);
+		--border: hsl(0 0% 30%);
 
 		/* Accent (10%) */
 		--accent: hsl(209 59% 52%);
