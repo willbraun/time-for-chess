@@ -5,6 +5,7 @@ export interface CategoryDistribution {
 	name: string
 	target: number
 	actual: number
+	total_seconds: number
 	bandLow: number
 	bandHigh: number
 	score: number
@@ -39,6 +40,7 @@ export function calculateDistribution(
 			name: cat.name,
 			target,
 			actual,
+			total_seconds: seconds,
 			bandLow,
 			bandHigh,
 			score: actual >= bandLow ? 0 : Math.sqrt(target - actual),

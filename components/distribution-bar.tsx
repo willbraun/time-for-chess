@@ -1,4 +1,5 @@
 import { useColorToken } from '@/hooks/use-color-token'
+import { formatDurationMinutes } from '@/lib/format'
 import type { CategoryDistribution } from '@/lib/recommendation'
 import { Text, View } from 'react-native'
 
@@ -20,13 +21,16 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 
 	return (
 		<View className='mb-4'>
+			<Text className='font-medium text-fg-primary'>{data.name}</Text>
 			<View className='flex-row justify-between items-center mb-1.5'>
-				<Text className=' font-medium text-fg-primary'>{data.name}</Text>
 				<Text
-					className={` font-semibold ${isUnder ? 'text-warning' : 'text-fg-muted'}`}
+					className={`text-sm font-semibold ${isUnder ? 'text-warning' : 'text-fg-muted'}`}
 					style={{ fontVariant: ['tabular-nums'], color: getDotColor() }}
 				>
-					{actualPct}%<Text className='font-normal text-[13px] text-fg-muted'> / {targetPct}%</Text>
+					{actualPct}%<Text className='font-normal text-fg-muted'> / {targetPct}%</Text>
+				</Text>
+				<Text className='text-fg-muted text-sm' style={{ fontVariant: ['tabular-nums'] }}>
+					{formatDurationMinutes(data.total_seconds)}
 				</Text>
 			</View>
 			<View className='h-10 rounded bg-surface' style={{ position: 'relative', overflow: 'visible' }}>
