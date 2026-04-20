@@ -2,6 +2,13 @@ import * as SQLite from 'expo-sqlite'
 
 let db: SQLite.SQLiteDatabase | null = null
 
+export async function closeDatabase(): Promise<void> {
+	if (db) {
+		await db.closeAsync()
+		db = null
+	}
+}
+
 export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
 	if (db) return db
 	db = await SQLite.openDatabaseAsync('timeforchess.db')
@@ -36,7 +43,7 @@ async function createTables(db: SQLite.SQLiteDatabase): Promise<void> {
 
 const DEFAULT_CATEGORIES = [
 	{ name: 'Playing + Analyzing', target_percentage: 0.33 },
-	{ name: 'Tactics / Calculation', target_percentage: 0.33 },
+	{ name: 'Tactics + Calculation', target_percentage: 0.33 },
 	{ name: 'Openings', target_percentage: 0.11 },
 	{ name: 'Endgames', target_percentage: 0.11 },
 	{ name: 'Strategy', target_percentage: 0.11 },

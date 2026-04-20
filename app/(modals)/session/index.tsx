@@ -15,7 +15,7 @@ export default function SessionIndex() {
 		return <Redirect href='/session/active' />
 	}
 	if (params.category) {
-		return <Redirect href={`/session/time-choice?categoryId=${params.category}`} />
+		return <Redirect href={`/session/select?preselect=${params.category}`} />
 	}
 	return <Redirect href='/session/select' />
 }

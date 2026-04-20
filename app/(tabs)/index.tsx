@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
 	const [distribution, setDistribution] = useState<CategoryDistribution[]>([])
 	const [recommendation, setRecommendation] = useState<Recommendation | null>(null)
-	const [hasData, setHasData] = useState(false)
+	const [, setHasData] = useState(false)
 	const [weekDays, setWeekDays] = useState<boolean[]>(Array(7).fill(false))
 	const [streak, setStreak] = useState(0)
 
@@ -70,7 +70,7 @@ export default function HomeScreen() {
 							return (
 								<View key={i} className='flex-1 items-center gap-1'>
 									<View
-										className={`w-full rounded-xl ${isToday ? 'border-4 border-amber-300' : ''} ${isFilled ? 'bg-accent' : 'bg-secondary'} ${isToday && isFilled ? 'border-success' : ''}`}
+										className={`w-full rounded-xl ${isToday ? 'border-4 border-amber-400' : ''} ${isFilled ? 'bg-accent' : 'bg-secondary'} ${isToday && isFilled ? 'border-success' : ''}`}
 										style={{ aspectRatio: 1 }}
 									/>
 									<Text className='text-xs text-fg-muted'>{label}</Text>
@@ -82,7 +82,7 @@ export default function HomeScreen() {
 
 				{/* Recommendation card */}
 				<Pressable onPress={handleRecommendationPress}>
-					{hasData && recommendation ? (
+					{recommendation ? (
 						<View className='rounded-2xl p-6 mb-6 bg-surface'>
 							<Text className='text-white/70 text-[13px] font-semibold uppercase tracking-[0.5px] mb-1'>
 								Recommended
@@ -90,21 +90,16 @@ export default function HomeScreen() {
 							<Text className='text-white text-[22px] font-bold mb-1'>{recommendation.category.name}</Text>
 							<Text className='text-white/80 text-sm'>Tap to start a session</Text>
 						</View>
-					) : hasData ? (
+					) : (
 						<View className='rounded-2xl p-6 mb-6 bg-accent'>
 							<Text className='text-white text-[22px] font-bold mb-1'>You&apos;re balanced!</Text>
 							<Text className='text-white/80 text-sm'>Tap to start any session</Text>
-						</View>
-					) : (
-						<View className='rounded-2xl p-6 mb-6 bg-secondary'>
-							<Text className='text-white text-[22px] font-bold mb-1'>Get started</Text>
-							<Text className='text-white/80 text-sm'>Log your first session to see recommendations</Text>
 						</View>
 					)}
 				</Pressable>
 
 				{/* Distribution bars */}
-				{hasData && (
+				{distribution.length > 0 && (
 					<View className='mt-1'>
 						<Text className='text-xl font-semibold mb-4 text-fg-primary'>30-Day Distribution</Text>
 						{distribution.map(d => (

@@ -24,7 +24,7 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 			<Text className='font-medium text-fg-primary'>{data.name}</Text>
 			<View className='flex-row justify-between items-center mb-1.5'>
 				<Text
-					className={`text-sm font-semibold ${isUnder ? 'text-warning' : 'text-fg-muted'}`}
+					className={`text-sm font-bold ${isUnder ? 'text-warning' : 'text-fg-muted'}`}
 					style={{ fontVariant: ['tabular-nums'], color: getDotColor() }}
 				>
 					{actualPct}%<Text className='font-normal text-fg-muted'> / {targetPct}%</Text>

@@ -1,9 +1,11 @@
 import { useFocusEffect } from 'expo-router'
+import * as SQLite from 'expo-sqlite'
 import { createRef, useCallback, useRef, useState, type RefObject } from 'react'
-import { SectionList, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import Swipeable, { type SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { closeDatabase, getDatabase } from '@/lib/database'
 import { formatDate, formatDurationMinutes, formatTime } from '@/lib/format'
 import { deleteSession, getRecentSessions, type SessionWithCategory } from '@/lib/sessions'
 
@@ -51,6 +53,23 @@ export default function HistoryScreen() {
 		}, []),
 	)
 
+	const handleResetDb = useCallback(() => {
+		Alert.alert('Reset Database', 'Delete all sessions and categories?', [
+			{ text: 'Cancel', style: 'cancel' },
+			{
+				text: 'Reset',
+				style: 'destructive',
+				onPress: async () => {
+					await closeDatabase()
+					await SQLite.deleteDatabaseAsync('timeforchess.db')
+					await getDatabase()
+					setSessions([])
+					setTotalSeconds(0)
+				},
+			},
+		])
+	}, [])
+
 	const handleDelete = useCallback(async (id: number) => {
 		await deleteSession(id)
 		setSessions(prev => {
@@ -80,6 +99,11 @@ export default function HistoryScreen() {
 				ListHeaderComponent={
 					<View className='mb-2 px-5'>
 						<Text className='text-4xl font-bold mb-4 text-fg-primary'>History</Text>
+						{__DEV__ && (
+							<TouchableOpacity onPress={handleResetDb} className='mb-4 items-center py-2 rounded-xl bg-red-500'>
+								<Text className='text-white font-semibold'>Reset Database (dev)</Text>
+							</TouchableOpacity>
+						)}
 						<View className='flex-row rounded-2xl p-4 mb-2 bg-surface'>
 							<View className='flex-1 items-center'>
 								<Text className='text-[22px] font-bold text-fg-primary'>{formatDurationMinutes(totalSeconds)}</Text>
