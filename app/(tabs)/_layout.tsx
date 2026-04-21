@@ -62,6 +62,7 @@ export default function TabLayout() {
 					name='index'
 					options={{
 						title: 'Home',
+						headerShown: false,
 						tabBarIcon: ({ color, size, focused }) =>
 							focused ? (
 								<View style={{ width: size, height: size }}>
@@ -77,6 +78,7 @@ export default function TabLayout() {
 					name='history'
 					options={{
 						title: 'History',
+						headerShown: false,
 						tabBarIcon: ({ color, size, focused }) => (
 							<History size={size} color={focused ? '#fff' : color} fill={focused ? color : 'none'} strokeWidth={1.5} />
 						),
