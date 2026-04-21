@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 
+import { AppButton } from '@/components/ui/app-button'
 import { useSession } from '@/lib/session-context'
 import { getCategories, type Category } from '@/lib/sessions'
 
@@ -60,13 +61,14 @@ export default function TimeChoiceScreen() {
 					</Text>
 					<View className='flex-row gap-2.5 flex-wrap'>
 						{PRESETS.map(p => (
-							<Pressable
+							<AppButton
 								key={p.seconds}
+								variant='surface'
 								onPress={() => handlePreset(p.seconds)}
-								className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-border items-center bg-surface'
+								className='flex-1 min-w-[40%] py-12'
 							>
 								<Text className='text-2xl font-medium text-fg-primary'>{p.label}</Text>
-							</Pressable>
+							</AppButton>
 						))}
 					</View>
 				</View>
@@ -74,9 +76,9 @@ export default function TimeChoiceScreen() {
 
 			{/* Start Timer pinned to bottom */}
 			<View className='gap-3'>
-				<Pressable onPress={handleStartTimer} className='rounded-full items-center p-4 bg-accent'>
+				<AppButton onPress={handleStartTimer}>
 					<Text className='text-white text-2xl font-semibold'>Start Timer</Text>
-				</Pressable>
+				</AppButton>
 			</View>
 		</View>
 	)

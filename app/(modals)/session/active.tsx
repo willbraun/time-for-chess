@@ -1,7 +1,8 @@
 import * as Haptics from 'expo-haptics'
 import { useRouter } from 'expo-router'
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
+import { AppButton } from '@/components/ui/app-button'
 import { formatDuration } from '@/lib/format'
 import { useSession } from '@/lib/session-context'
 
@@ -27,9 +28,9 @@ export default function ActiveScreen() {
 					{formatDuration(elapsedSeconds)}
 				</Text>
 			</View>
-			<Pressable onPress={handleStop} className='rounded-full items-center p-4 bg-accent'>
+			<AppButton onPress={handleStop}>
 				<Text className='text-white text-2xl font-semibold'>End Session</Text>
-			</Pressable>
+			</AppButton>
 		</View>
 	)
 }

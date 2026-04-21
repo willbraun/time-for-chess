@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router'
 import { Pressable, Text, View } from 'react-native'
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { AppButton } from '@/components/ui/app-button'
 import { formatDuration } from '@/lib/format'
 import { useSession } from '@/lib/session-context'
 
@@ -32,11 +32,6 @@ export function SessionFAB() {
 	const { activeSession } = useSession()
 	const router = useRouter()
 	const insets = useSafeAreaInsets()
-	const scale = useSharedValue(1)
-
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.value }],
-	}))
 
 	if (activeSession) return null
 
@@ -51,19 +46,9 @@ export function SessionFAB() {
 				marginHorizontal: 20,
 			}}
 		>
-			<Pressable
-				onPress={() => router.push('/session' as any)}
-				onPressIn={() => {
-					scale.value = withTiming(0.96, { duration: 75 })
-				}}
-				onPressOut={() => {
-					scale.value = withTiming(1, { duration: 75 })
-				}}
-			>
-				<Animated.View className='bg-accent rounded-full px-8 py-4 shadow-xl' style={animatedStyle}>
-					<Text className='text-white text-2xl m-auto font-semibold'>Start Session</Text>
-				</Animated.View>
-			</Pressable>
+			<AppButton onPress={() => router.push('/session' as any)} className='px-8 py-4 shadow-xl'>
+				<Text className='text-white text-2xl m-auto font-semibold '>Start Session</Text>
+			</AppButton>
 		</View>
 	)
 }

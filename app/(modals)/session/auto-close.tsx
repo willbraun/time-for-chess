@@ -1,7 +1,8 @@
 import * as Haptics from 'expo-haptics'
 import { useRouter } from 'expo-router'
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
+import { AppButton } from '@/components/ui/app-button'
 import { useSession } from '@/lib/session-context'
 
 const PRESETS = [
@@ -36,21 +37,22 @@ export default function AutoCloseScreen() {
 				Your {activeSession.category_name} session has been running for over an hour.
 			</Text>
 
-			<Pressable onPress={handleContinue} className='py-4 rounded-xl items-center px-4 bg-accent'>
+			<AppButton onPress={handleContinue} className='rounded-xl'>
 				<Text className='text-white text-2xl font-semibold'>Continue Session</Text>
-			</Pressable>
+			</AppButton>
 
 			<Text className='text-center mb-4 text-sm text-fg-muted'>or stop and estimate your time</Text>
 
 			<View className='flex-row gap-2.5 flex-wrap'>
 				{PRESETS.map(p => (
-					<Pressable
+					<AppButton
 						key={p.seconds}
+						variant='surface'
 						onPress={() => handleStop(p.seconds)}
-						className='flex-1 min-w-[40%] py-12 rounded-[10px] border border-border items-center bg-surface'
+						className='flex-1 min-w-[40%] py-12'
 					>
 						<Text className='text-2xl font-medium text-fg-primary'>{p.label}</Text>
-					</Pressable>
+					</AppButton>
 				))}
 			</View>
 		</View>

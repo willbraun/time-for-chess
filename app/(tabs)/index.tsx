@@ -11,6 +11,7 @@ import {
 	type Recommendation,
 } from '@/lib/recommendation'
 import { getCategories, getCategoryTotals, getCurrentStreak, getWeekSessionDays } from '@/lib/sessions'
+import { Flame } from 'lucide-react-native'
 
 const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
@@ -62,7 +63,12 @@ export default function HomeScreen() {
 
 				{/* Streak + week calendar */}
 				<View className='mb-6'>
-					{streak > 0 && <Text className='text-fg-primary font-medium mb-3'>{streak} day streak</Text>}
+					{streak > 0 && (
+						<View className='flex-row items-center gap-2 mb-2'>
+							<Text className='text-fg-primary text-xl font-medium'>{streak} day streak</Text>
+							{/* <Flame width={28} height={28} color='#f97316' /> */}
+						</View>
+					)}
 					<View className='flex-row gap-2'>
 						{DAY_LABELS.map((label, i) => {
 							const isToday = i === new Date().getDay()
@@ -72,7 +78,15 @@ export default function HomeScreen() {
 									<View
 										className={`w-full rounded-xl ${isToday ? 'border-2 border-accent border-dashed' : ''} ${isFilled ? 'bg-accent' : 'bg-secondary'}`}
 										style={{ aspectRatio: 1 }}
-									/>
+									>
+										<Flame
+											width={28}
+											height={28}
+											color={isFilled ? 'hsl(40, 100%, 50%)' : '#fff'}
+											fill={isFilled ? 'hsl(40, 100%, 50%)' : 'none'}
+											style={{ margin: 'auto' }}
+										/>
+									</View>
 									<Text className='text-xs text-fg-muted'>{label}</Text>
 								</View>
 							)
@@ -83,7 +97,7 @@ export default function HomeScreen() {
 				{/* Recommendation card */}
 				<Pressable onPress={handleRecommendationPress}>
 					{recommendation ? (
-						<View className='rounded-2xl p-6 mb-6 bg-surface'>
+						<View className='rounded-2xl border-2 border-border p-6 mb-6 bg-surface'>
 							<Text className='text-white/70 text-[13px] font-semibold uppercase tracking-[0.5px] mb-1'>
 								Recommended
 							</Text>
