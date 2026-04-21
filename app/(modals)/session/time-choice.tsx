@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
@@ -27,12 +28,14 @@ export default function TimeChoiceScreen() {
 
 	const handleStartTimer = async () => {
 		if (!category) return
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 		await startSession(category.id)
 		router.replace('/session/active' as any)
 	}
 
 	const handlePreset = async (seconds: number) => {
 		if (!category) return
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 		await logPreset(category.id, seconds)
 		router.replace(`/session/summary?duration=${seconds}&categoryName=${encodeURIComponent(category.name)}` as any)
 	}

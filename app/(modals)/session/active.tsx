@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics'
 import { useRouter } from 'expo-router'
 import { Pressable, Text, View } from 'react-native'
 
@@ -11,6 +12,7 @@ export default function ActiveScreen() {
 	const handleStop = async () => {
 		const elapsed = elapsedSeconds
 		const categoryName = activeSession?.category_name ?? ''
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 		await stopSession()
 		router.replace(`/session/summary?duration=${elapsed}&categoryName=${encodeURIComponent(categoryName)}` as any)
 	}

@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics'
 import { useRouter } from 'expo-router'
 import { Pressable, Text, View } from 'react-native'
 
@@ -21,6 +22,7 @@ export default function AutoCloseScreen() {
 
 	const handleStop = async (seconds: number) => {
 		const categoryName = activeSession?.category_name ?? ''
+		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 		await confirmStop(seconds)
 		router.replace(`/session/summary?duration=${seconds}&categoryName=${encodeURIComponent(categoryName)}` as any)
 	}
