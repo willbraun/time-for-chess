@@ -6,6 +6,8 @@ import { Pressable, Text, View } from 'react-native'
 import { AppButton } from '@/components/ui/app-button'
 import { useSession } from '@/lib/session-context'
 import { getCategories, type Category } from '@/lib/sessions'
+import { ChevronLeft } from 'lucide-react-native'
+import { useColorToken } from '../../../hooks/use-color-token'
 
 const PRESETS = [
 	{ label: '15 min', seconds: 15 * 60 },
@@ -19,6 +21,7 @@ export default function TimeChoiceScreen() {
 	const { categoryId } = useLocalSearchParams<{ categoryId: string }>()
 	const { startSession, logPreset } = useSession()
 	const [category, setCategory] = useState<Category | null>(null)
+	const mutedColor = useColorToken('--fg-muted')
 
 	useEffect(() => {
 		getCategories().then(cats => {
@@ -48,9 +51,6 @@ export default function TimeChoiceScreen() {
 			<View className='flex-1 gap-6'>
 				{/* Header */}
 				<View className='flex-row items-center gap-3'>
-					<Pressable onPress={() => router.back()} className='p-1 -ml-1'>
-						<Text className='text-2xl text-accent'>←</Text>
-					</Pressable>
 					<Text className='text-3xl font-bold text-fg-primary'>{category.name}</Text>
 				</View>
 
@@ -72,6 +72,14 @@ export default function TimeChoiceScreen() {
 						))}
 					</View>
 				</View>
+				<Pressable onPress={() => router.back()} className='p-1'>
+					<View className='flex-row items-center gap-1'>
+						<ChevronLeft size={24} color={mutedColor} />
+						<Text className='text-sm font-semibold uppercase tracking-widest text-fg-muted'>
+							Choose another category
+						</Text>
+					</View>
+				</Pressable>
 			</View>
 
 			{/* Start Timer pinned to bottom */}

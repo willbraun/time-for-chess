@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { DistributionBar } from '@/components/distribution-bar'
@@ -11,7 +11,8 @@ import {
 	type Recommendation,
 } from '@/lib/recommendation'
 import { getCategories, getCategoryTotals, getCurrentStreak, getWeekSessionDays } from '@/lib/sessions'
-import { Flame } from 'lucide-react-native'
+import { ChevronRight, Flame } from 'lucide-react-native'
+import { AppButton } from '../../components/ui/app-button'
 
 const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
@@ -58,7 +59,7 @@ export default function HomeScreen() {
 
 	return (
 		<ScrollView className='flex-1 bg-primary' contentContainerStyle={{ paddingTop: insets.top + 16 }}>
-			<View className='px-5 pb-20'>
+			<View className='px-5 pb-6'>
 				<Text className='text-4xl font-bold mb-4 text-fg-primary'>Time for Chess</Text>
 
 				{/* Streak + week calendar */}
@@ -66,7 +67,6 @@ export default function HomeScreen() {
 					{streak > 0 && (
 						<View className='flex-row items-center gap-2 mb-2'>
 							<Text className='text-fg-primary text-xl font-medium'>{streak} day streak</Text>
-							{/* <Flame width={28} height={28} color='#f97316' /> */}
 						</View>
 					)}
 					<View className='flex-row gap-2'>
@@ -95,22 +95,24 @@ export default function HomeScreen() {
 				</View>
 
 				{/* Recommendation card */}
-				<Pressable onPress={handleRecommendationPress}>
-					{recommendation ? (
-						<View className='rounded-2xl border-2 border-border p-6 mb-6 bg-surface'>
-							<Text className='text-white/70 text-[13px] font-semibold uppercase tracking-[0.5px] mb-1'>
-								Recommended
-							</Text>
-							<Text className='text-white text-[22px] font-bold mb-1'>{recommendation.category.name}</Text>
-							<Text className='text-white/80 text-sm'>Tap to start a session</Text>
+				<AppButton onPress={handleRecommendationPress} variant='other'>
+					<View className='rounded-2xl p-6 mb-6 bg-primary bg-linear-to-r from-accent to-accent-subtle'>
+						{recommendation ? (
+							<View>
+								<Text className='text-white/70 text-lg font-semibold uppercase tracking-[0.5px] mb-1'>Recommended</Text>
+								<Text className='text-white text-3xl font-bold mb-1'>{recommendation.category.name}</Text>
+							</View>
+						) : (
+							<View className='rounded-2xl p-6 mb-6 bg-primary bg-linear-to-r from-accent to-accent-subtle'>
+								<Text className='text-white text-3xl font-bold mb-1'>You&apos;re balanced!</Text>
+							</View>
+						)}
+						<View className='flex-row items-center gap-2 justify-between'>
+							<Text className='text-white/80'>Tap to start a session</Text>
+							<ChevronRight size={24} color='white' />
 						</View>
-					) : (
-						<View className='rounded-2xl p-6 mb-6 bg-accent'>
-							<Text className='text-white text-[22px] font-bold mb-1'>You&apos;re balanced!</Text>
-							<Text className='text-white/80 text-sm'>Tap to start any session</Text>
-						</View>
-					)}
-				</Pressable>
+					</View>
+				</AppButton>
 
 				{/* Distribution bars */}
 				{distribution.length > 0 && (

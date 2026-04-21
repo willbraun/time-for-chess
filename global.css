@@ -45,7 +45,7 @@
 
 		/* Accent (10%) */
 		--accent: hsl(209 59% 52%);
-		--accent-subtle: hsl(209 59% 15%);
+		--accent-subtle: hsl(209 100% 23%);
 		--accent-foreground: hsl(0 0% 100%);
 
 		/* Feedback (utility) */

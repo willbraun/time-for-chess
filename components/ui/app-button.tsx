@@ -6,7 +6,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 interface AppButtonProps {
 	onPress?: () => void
-	variant?: 'primary' | 'surface'
+	variant?: 'primary' | 'surface' | 'other'
 	className?: string
 	children: ReactNode
 }
@@ -14,6 +14,7 @@ interface AppButtonProps {
 const variantClass = {
 	primary: 'rounded-full items-center p-4 bg-accent',
 	surface: 'rounded-[10px] border border-border items-center bg-surface',
+	other: '',
 }
 
 export function AppButton({ onPress, variant = 'primary', className = '', children }: AppButtonProps) {

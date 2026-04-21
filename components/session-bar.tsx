@@ -1,8 +1,6 @@
 import { useRouter } from 'expo-router'
-import { Pressable, Text, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Pressable, Text } from 'react-native'
 
-import { AppButton } from '@/components/ui/app-button'
 import { formatDuration } from '@/lib/format'
 import { useSession } from '@/lib/session-context'
 
@@ -25,30 +23,5 @@ export function SessionBar() {
 				{formatDuration(elapsedSeconds)}
 			</Text>
 		</Pressable>
-	)
-}
-
-export function SessionFAB() {
-	const { activeSession } = useSession()
-	const router = useRouter()
-	const insets = useSafeAreaInsets()
-
-	if (activeSession) return null
-
-	return (
-		<View
-			pointerEvents='box-none'
-			style={{
-				position: 'absolute',
-				bottom: insets.bottom + 64,
-				left: 0,
-				right: 0,
-				marginHorizontal: 20,
-			}}
-		>
-			<AppButton onPress={() => router.push('/session' as any)} className='px-8 py-4 shadow-xl'>
-				<Text className='text-white text-2xl m-auto font-semibold '>Start Session</Text>
-			</AppButton>
-		</View>
 	)
 }

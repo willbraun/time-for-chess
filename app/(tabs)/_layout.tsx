@@ -1,5 +1,5 @@
 import { HapticTab } from '@/components/haptic-tab'
-import { SessionBar, SessionFAB } from '@/components/session-bar'
+import { SessionBar } from '@/components/session-bar'
 import { useColorToken } from '@/hooks/use-color-token'
 import { Tabs } from 'expo-router'
 import { History, Home } from 'lucide-react-native'
@@ -85,7 +85,6 @@ export default function TabLayout() {
 					}}
 				/>
 			</Tabs>
-			<SessionFAB />
 		</View>
 	)
 }
