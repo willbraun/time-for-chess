@@ -19,9 +19,9 @@ export default function SummaryScreen() {
 					<IconSymbol name='checkmark.circle.fill' size={72} color={primaryColor} />
 					<Text className='text-2xl font-bold text-fg-primary'>Session logged!</Text>
 				</View>
-				<View className='w-full rounded-2xl p-8 items-center gap-1 bg-surface border border-border'>
+				<View className='w-full rounded-2xl p-8 items-center gap-4 bg-surface border border-border'>
 					<Text className='font-semibold uppercase tracking-widest text-fg-muted'>{categoryName}</Text>
-					<Text className='text-[100px] font-extralight text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
+					<Text className='text-7xl font-extralight text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
 						{formatDuration(durationSeconds)}
 					</Text>
 				</View>

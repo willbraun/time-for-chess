@@ -70,7 +70,7 @@ export default function HomeScreen() {
 							return (
 								<View key={i} className='flex-1 items-center gap-1'>
 									<View
-										className={`w-full rounded-xl ${isToday ? 'border-4 border-amber-400' : ''} ${isFilled ? 'bg-accent' : 'bg-secondary'} ${isToday && isFilled ? 'border-success' : ''}`}
+										className={`w-full rounded-xl ${isToday ? 'border-2 border-accent border-dashed' : ''} ${isFilled ? 'bg-accent' : 'bg-secondary'}`}
 										style={{ aspectRatio: 1 }}
 									/>
 									<Text className='text-xs text-fg-muted'>{label}</Text>

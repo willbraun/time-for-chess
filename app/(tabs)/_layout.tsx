@@ -13,11 +13,6 @@ export default function TabLayout() {
 	return (
 		<View style={{ flex: 1 }}>
 			<Tabs
-				screenOptions={{
-					tabBarActiveTintColor: tint,
-					headerShown: false,
-					tabBarButton: HapticTab,
-				}}
 				tabBar={props => (
 					<View>
 						<SessionBar />
