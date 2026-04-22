@@ -66,7 +66,7 @@ export default function HomeScreen() {
 				<View className='mb-6'>
 					{streak > 0 && (
 						<View className='flex-row items-center gap-2 mb-2'>
-							<Text className='text-fg-primary text-xl font-medium'>{streak} day streak</Text>
+							<Text className='text-fg-primary text-xl font-medium'>{streak} Day Streak</Text>
 						</View>
 					)}
 					<View className='flex-row gap-2'>
@@ -103,12 +103,10 @@ export default function HomeScreen() {
 								<Text className='text-white text-3xl font-bold mb-1'>{recommendation.category.name}</Text>
 							</View>
 						) : (
-							<View className='rounded-2xl p-6 mb-6 bg-primary bg-linear-to-r from-accent to-accent-subtle'>
-								<Text className='text-white text-3xl font-bold mb-1'>You&apos;re balanced!</Text>
-							</View>
+							<Text className='text-white text-3xl font-bold mb-1'>You&apos;re balanced!</Text>
 						)}
 						<View className='flex-row items-center gap-2 justify-between'>
-							<Text className='text-white/80'>Tap to start a session</Text>
+							<Text className='text-white/80'>{`Tap to start ${recommendation ? 'a' : 'any'} session`}</Text>
 							<ChevronRight size={24} color='white' />
 						</View>
 					</View>
@@ -116,8 +114,8 @@ export default function HomeScreen() {
 
 				{/* Distribution bars */}
 				{distribution.length > 0 && (
-					<View className='mt-1'>
-						<Text className='text-xl font-semibold mb-4 text-fg-primary'>30-Day Distribution</Text>
+					<View className='mt-1 flex gap-4'>
+						<Text className='text-xl font-semibold text-fg-primary'>30 Day Distribution</Text>
 						{distribution.map(d => (
 							<DistributionBar key={d.category_id} data={d} />
 						))}

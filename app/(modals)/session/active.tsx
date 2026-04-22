@@ -1,5 +1,6 @@
 import * as Haptics from 'expo-haptics'
 import { useRouter } from 'expo-router'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
 
 import { AppButton } from '@/components/ui/app-button'
@@ -8,7 +9,16 @@ import { useSession } from '@/lib/session-context'
 
 export default function ActiveScreen() {
 	const router = useRouter()
-	const { activeSession, elapsedSeconds, stopSession } = useSession()
+	const { activeSession, elapsedSeconds, stopSession, autoCloseResult, clearAutoCloseResult } = useSession()
+
+	// Navigate to summary when auto-close fires while user is watching the timer
+	useEffect(() => {
+		if (autoCloseResult) {
+			const { duration, categoryName } = autoCloseResult
+			clearAutoCloseResult()
+			router.replace(`/session/summary?duration=${duration}&categoryName=${encodeURIComponent(categoryName)}` as any)
+		}
+	}, [autoCloseResult, clearAutoCloseResult, router])
 
 	const handleStop = async () => {
 		const elapsed = elapsedSeconds

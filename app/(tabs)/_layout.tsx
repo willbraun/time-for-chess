@@ -16,7 +16,7 @@ export default function TabLayout() {
 				tabBar={props => (
 					<View>
 						<SessionBar />
-						<View className='h-24 flex-row bg-secondary border-t-2 border-border'>
+						<View className='h-24 flex-row bg-secondary'>
 							{props.state.routes.map((route, index) => {
 								const { options } = props.descriptors[route.key]
 								const isFocused = props.state.index === index
@@ -35,7 +35,7 @@ export default function TabLayout() {
 												props.navigation.navigate(route.name)
 											}
 										}}
-										className='flex-1 items-center justify-center gap-1 mb-4'
+										className='flex-1 items-center justify-center gap-1 mb-2'
 									>
 										{options.tabBarIcon?.({
 											color: isFocused ? tint : icon,

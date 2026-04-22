@@ -14,6 +14,8 @@ const PRESETS = [
 	{ label: '30 min', seconds: 30 * 60 },
 	{ label: '45 min', seconds: 45 * 60 },
 	{ label: '60 min', seconds: 60 * 60 },
+	{ label: '90 min', seconds: 90 * 60 },
+	{ label: '120 min', seconds: 120 * 60 },
 ]
 
 export default function TimeChoiceScreen() {
@@ -65,7 +67,7 @@ export default function TimeChoiceScreen() {
 								key={p.seconds}
 								variant='surface'
 								onPress={() => handlePreset(p.seconds)}
-								className='flex-1 min-w-[40%] py-12'
+								className='flex-1 min-w-[40%] py-10'
 							>
 								<Text className='text-2xl font-medium text-fg-primary'>{p.label}</Text>
 							</AppButton>

@@ -13,7 +13,7 @@ interface AppButtonProps {
 
 const variantClass = {
 	primary: 'rounded-full items-center p-4 bg-accent',
-	surface: 'rounded-[10px] border border-border items-center bg-surface',
+	surface: 'rounded-[10px] p-4 items-center bg-surface',
 	other: '',
 }
 

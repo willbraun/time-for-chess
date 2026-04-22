@@ -104,7 +104,7 @@ export default function HistoryScreen() {
 								<Text className='text-white font-semibold'>Reset Database (dev)</Text>
 							</TouchableOpacity>
 						)}
-						<View className='flex-row rounded-2xl p-4 mb-2 bg-surface border-2 border-border'>
+						<View className='flex-row rounded-2xl p-4 mb-2 bg-surface'>
 							<View className='flex-1 items-center'>
 								<Text className='text-[22px] font-bold text-fg-primary'>{formatDurationMinutes(totalSeconds)}</Text>
 								<Text className='text-[13px] mt-0.5 text-fg-muted'>Total (30d)</Text>

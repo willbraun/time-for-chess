@@ -68,7 +68,7 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 	}
 
 	return (
-		<View className='mb-4'>
+		<View>
 			<Text className='font-medium text-fg-primary'>{data.name}</Text>
 			<View className='flex-row justify-between items-center mb-1.5'>
 				<Text

@@ -31,7 +31,8 @@ export default function SelectScreen() {
 					<AppButton
 						key={cat.id}
 						onPress={() => router.push(`/session/time-choice?categoryId=${cat.id}` as any)}
-						className='py-4.5 px-5 rounded-xl bg-secondary border-border border'
+						variant='surface'
+						className='py-6'
 					>
 						<Text className='text-2xl font-medium text-center text-white'>{cat.name}</Text>
 					</AppButton>

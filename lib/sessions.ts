@@ -63,6 +63,19 @@ export async function autoCloseSession(sessionId: number, durationSeconds: numbe
 	])
 }
 
+export async function stopSessionWithDuration(sessionId: number, durationSeconds: number): Promise<void> {
+	const db = await getDatabase()
+	const session = await db.getFirstAsync<Session>('SELECT * FROM sessions WHERE id = ?', [sessionId])
+	if (!session) return
+	const endTime = session.start_time + durationSeconds
+	await db.runAsync('UPDATE sessions SET end_time = ?, duration_seconds = ?, status = ? WHERE id = ?', [
+		endTime,
+		durationSeconds,
+		'completed',
+		sessionId,
+	])
+}
+
 export async function logPresetSession(categoryId: number, durationSeconds: number): Promise<number> {
 	const db = await getDatabase()
 	const now = Math.floor(Date.now() / 1000)
