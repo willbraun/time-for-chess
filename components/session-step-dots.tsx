@@ -5,12 +5,13 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } fr
 
 import { useColorToken } from '@/hooks/use-color-token'
 
-const TOTAL_STEPS = 3
+const TOTAL_STEPS = 4
 
 function getStepIndex(pathname: string): number | null {
 	if (pathname.endsWith('/select')) return 0
 	if (pathname.endsWith('/time-choice')) return 1
-	if (pathname.endsWith('/active') || pathname.endsWith('/auto-close')) return 2
+	if (pathname.endsWith('/active') || pathname.endsWith('/session-reminder')) return 2
+	if (pathname.endsWith('/summary')) return 3
 	return null
 }
 

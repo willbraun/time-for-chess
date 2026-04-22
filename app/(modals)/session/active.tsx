@@ -22,7 +22,7 @@ export default function ActiveScreen() {
 	const handleStop = async () => {
 		const elapsed = elapsedSeconds
 		const categoryName = activeSession?.category_name ?? ''
-		stopSession()
+		await stopSession()
 		router.replace(`/session/summary?duration=${elapsed}&categoryName=${encodeURIComponent(categoryName)}` as any)
 	}
 

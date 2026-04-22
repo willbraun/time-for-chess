@@ -60,7 +60,7 @@ export default function HomeScreen() {
 	return (
 		<ScrollView className='flex-1 bg-primary' contentContainerStyle={{ paddingTop: insets.top + 16 }}>
 			<View className='px-5 pb-6'>
-				<Text className='text-4xl font-bold mb-4 text-fg-primary'>Time for Chess</Text>
+				<Text className='text-2xl font-semibold mb-4 text-fg-primary'>Time for Chess</Text>
 
 				{/* Streak + week calendar */}
 				<View className='mb-6'>
