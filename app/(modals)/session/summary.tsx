@@ -1,5 +1,8 @@
+import * as Haptics from 'expo-haptics'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
+import { useEffect } from 'react'
 import { Text, View } from 'react-native'
+import Animated, { BounceIn } from 'react-native-reanimated'
 
 import { AppButton } from '@/components/ui/app-button'
 import { IconSymbol } from '@/components/ui/icon-symbol'
@@ -13,13 +16,20 @@ export default function SummaryScreen() {
 
 	const durationSeconds = parseInt(duration, 10)
 
+	useEffect(() => {
+		setTimeout(() => {
+			Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+			// Delay to align with the check mark bounce animation
+		}, 105)
+	}, [])
+
 	return (
 		<View className='flex-1 p-6'>
 			<View className='flex-1 items-center justify-center gap-8'>
-				<View className='items-center gap-3'>
+				<Animated.View entering={BounceIn} className='items-center gap-3'>
 					<IconSymbol name='checkmark.circle.fill' size={72} color={primaryColor} />
-					<Text className='text-2xl font-bold text-fg-primary'>Session logged!</Text>
-				</View>
+				</Animated.View>
+				<Text className='text-2xl font-bold text-fg-primary'>Session logged!</Text>
 				<View className='w-full rounded-2xl p-8 items-center gap-4 bg-surface'>
 					<Text className='font-semibold uppercase tracking-widest text-fg-muted'>{categoryName}</Text>
 					<Text className='text-7xl font-extralight text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>

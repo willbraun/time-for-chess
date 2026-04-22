@@ -3,6 +3,7 @@ import * as SQLite from 'expo-sqlite'
 import { createRef, useCallback, useRef, useState, type RefObject } from 'react'
 import { Alert, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import Swipeable, { type SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { closeDatabase, getDatabase } from '@/lib/database'
@@ -41,13 +42,16 @@ export default function HistoryScreen() {
 
 	const [sessions, setSessions] = useState<SessionWithCategory[]>([])
 	const [totalSeconds, setTotalSeconds] = useState(0)
+	const [loaded, setLoaded] = useState(false)
 
 	useFocusEffect(
 		useCallback(() => {
+			setLoaded(false)
 			async function load() {
 				const recent = await getRecentSessions(30)
 				setSessions(recent)
 				setTotalSeconds(recent.reduce((sum, s) => sum + (s.duration_seconds ?? 0), 0))
+				setLoaded(true)
 			}
 			load()
 		}, []),
@@ -121,38 +125,42 @@ export default function HistoryScreen() {
 						{section.title}
 					</Text>
 				)}
-				renderItem={({ item }) => (
-					<Swipeable
-						ref={getSwipeableRef(item.id)}
-						onSwipeableOpen={() => {
-							swipeableRefs.current.forEach((ref, id) => {
-								if (id !== item.id) ref.current?.close()
-							})
-						}}
-						renderRightActions={() => renderRightActions(item.id)}
-						rightThreshold={40}
-					>
-						<View className='bg-primary'>
-							<View className='flex-row items-center py-3 px-5'>
-								<View className='flex-1'>
-									<Text className='text-[15px] font-medium text-fg-primary'>{item.category_name}</Text>
-									<Text className='text-[13px] mt-0.5 text-fg-muted'>
-										{formatTime(item.start_time)}
-										{item.status === 'auto_closed' ? ' · auto-closed' : ''}
+				renderItem={({ item, index }) => (
+					<Animated.View entering={FadeInDown.delay(index * 40).duration(300)}>
+						<Swipeable
+							ref={getSwipeableRef(item.id)}
+							onSwipeableOpen={() => {
+								swipeableRefs.current.forEach((ref, id) => {
+									if (id !== item.id) ref.current?.close()
+								})
+							}}
+							renderRightActions={() => renderRightActions(item.id)}
+							rightThreshold={40}
+						>
+							<View className='bg-primary'>
+								<View className='flex-row items-center py-3 px-5'>
+									<View className='flex-1'>
+										<Text className='text-[15px] font-medium text-fg-primary'>{item.category_name}</Text>
+										<Text className='text-[13px] mt-0.5 text-fg-muted'>
+											{formatTime(item.start_time)}
+											{item.status === 'auto_closed' ? ' · auto-closed' : ''}
+										</Text>
+									</View>
+									<Text className='text-[15px] font-semibold text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
+										{formatDurationMinutes(item.duration_seconds ?? 0)}
 									</Text>
 								</View>
-								<Text className='text-[15px] font-semibold text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
-									{formatDurationMinutes(item.duration_seconds ?? 0)}
-								</Text>
+								<View className='h-px bg-border mx-5' />
 							</View>
-							<View className='h-px bg-border mx-5' />
-						</View>
-					</Swipeable>
+						</Swipeable>
+					</Animated.View>
 				)}
 				ListEmptyComponent={
-					<View className='items-center pt-15 px-5'>
-						<Text className='text-base text-fg-muted'>No sessions yet. Start your first one!</Text>
-					</View>
+					loaded ? (
+						<View className='items-center pt-15 px-5'>
+							<Text className='text-base text-fg-muted'>No sessions yet. Start your first one!</Text>
+						</View>
+					) : null
 				}
 			/>
 		</View>

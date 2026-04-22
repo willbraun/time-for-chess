@@ -85,3 +85,7 @@ const color = useColorToken('--fg-secondary')
 // Navigate to session modal with preselected category
 router.push({ pathname: '/session', params: { category: String(catId) } } as any)
 ```
+
+## Guidelines for Handling Prompts
+
+- NEVER create external scripts to perform a task you can do without it. For example, do not create a python script or a node script to read or edit files when you can just read or edit the files yourself.

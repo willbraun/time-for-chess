@@ -64,11 +64,9 @@ export default function HomeScreen() {
 
 				{/* Streak + week calendar */}
 				<View className='mb-6'>
-					{streak > 0 && (
-						<View className='flex-row items-center gap-2 mb-2'>
-							<Text className='text-fg-primary text-xl font-medium'>{streak} Day Streak</Text>
-						</View>
-					)}
+					<View className='flex-row items-center gap-2 mb-2'>
+						<Text className='text-fg-primary text-xl font-medium'>{streak} Day Streak</Text>
+					</View>
 					<View className='flex-row gap-2'>
 						{DAY_LABELS.map((label, i) => {
 							const isToday = i === new Date().getDay()
