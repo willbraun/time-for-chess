@@ -98,11 +98,11 @@ export default function HomeScreen() {
 					<View className='rounded-2xl p-6 mb-6 bg-primary bg-linear-to-r from-accent to-accent-subtle'>
 						{recommendation ? (
 							<View>
-								<Text className='text-white/70 text-lg font-semibold uppercase tracking-[0.5px] mb-1'>Recommended</Text>
-								<Text className='text-white text-3xl font-bold mb-1'>{recommendation.category.name}</Text>
+								<Text className='text-white/70 text-lg font-semibold uppercase tracking-widest mb-1'>Recommended</Text>
+								<Text className='text-white text-3xl font-semibold mb-1'>{recommendation.category.name}</Text>
 							</View>
 						) : (
-							<Text className='text-white text-3xl font-bold mb-1'>You&apos;re balanced!</Text>
+							<Text className='text-white text-3xl font-semibold mb-1'>You&apos;re balanced!</Text>
 						)}
 						<View className='flex-row items-center gap-2 justify-between'>
 							<Text className='text-white/80'>{`Tap to start ${recommendation ? 'a' : 'any'} session`}</Text>

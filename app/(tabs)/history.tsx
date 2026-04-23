@@ -111,18 +111,18 @@ export default function HistoryScreen() {
 						)}
 						<View className='flex-row rounded-2xl p-4 mb-2 bg-surface'>
 							<View className='flex-1 items-center'>
-								<Text className='text-[22px] font-bold text-fg-primary'>{formatDurationMinutes(totalSeconds)}</Text>
-								<Text className='text-[13px] mt-0.5 text-fg-muted'>Total (30d)</Text>
+								<Text className='text-xl font-bold text-fg-primary'>{formatDurationMinutes(totalSeconds)}</Text>
+								<Text className='text-base mt-0.5 text-fg-muted'>Total (30d)</Text>
 							</View>
 							<View className='flex-1 items-center'>
-								<Text className='text-[22px] font-bold text-fg-primary'>{sessions.length}</Text>
-								<Text className='text-[13px] mt-0.5 text-fg-muted'>Sessions</Text>
+								<Text className='text-xl font-bold text-fg-primary'>{sessions.length}</Text>
+								<Text className='text-base mt-0.5 text-fg-muted'>Sessions</Text>
 							</View>
 						</View>
 					</View>
 				}
 				renderSectionHeader={({ section }) => (
-					<Text className='text-[13px] font-semibold uppercase tracking-[0.5px] mt-8 px-5 text-fg-muted bg-primary'>
+					<Text className='text-base font-semibold uppercase tracking-widest mt-8 px-5 text-fg-muted bg-primary'>
 						{section.title}
 					</Text>
 				)}
@@ -141,13 +141,13 @@ export default function HistoryScreen() {
 							<View className='bg-primary'>
 								<View className='flex-row items-center py-3 px-5'>
 									<View className='flex-1'>
-										<Text className='text-[15px] font-medium text-fg-primary'>{item.category_name}</Text>
-										<Text className='text-[13px] mt-0.5 text-fg-muted'>
+										<Text className='text-base font-medium text-fg-primary'>{item.category_name}</Text>
+										<Text className='text-sm mt-0.5 text-fg-muted'>
 											{formatTime(item.start_time)}
 											{item.status === 'auto_closed' ? ' · auto-closed' : ''}
 										</Text>
 									</View>
-									<Text className='text-[15px] font-semibold text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
+									<Text className='text-base font-semibold text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
 										{formatDurationMinutes(item.duration_seconds ?? 0)}
 									</Text>
 								</View>

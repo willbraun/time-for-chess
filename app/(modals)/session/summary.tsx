@@ -32,7 +32,7 @@ export default function SummaryScreen() {
 				</Animated.View>
 				<Text className='text-2xl font-bold text-fg-primary'>Session logged!</Text>
 				<View className='w-full rounded-2xl p-8 items-center gap-4 bg-surface'>
-					<Text className='font-semibold uppercase tracking-widest text-fg-muted'>{categoryName}</Text>
+					<Text className='text-xl font-semibold uppercase tracking-widest text-fg-muted'>{categoryName}</Text>
 					<Text className='text-7xl font-extralight text-fg-primary' style={{ fontVariant: ['tabular-nums'] }}>
 						{formatDuration(durationSeconds)}
 					</Text>
