@@ -1,6 +1,7 @@
+import { Text } from '@/components/ui/text'
 import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { AppButton } from '@/components/ui/app-button'
 import { formatDuration } from '@/lib/format'

@@ -1,5 +1,6 @@
+import { Text } from '@/components/ui/text'
 import { useRouter } from 'expo-router'
-import { Pressable, Text } from 'react-native'
+import { Pressable } from 'react-native'
 
 import { formatDuration } from '@/lib/format'
 import { useSession } from '@/lib/session-context'

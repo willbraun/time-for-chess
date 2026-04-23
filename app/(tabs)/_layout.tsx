@@ -1,10 +1,11 @@
 import { HapticTab } from '@/components/haptic-tab'
 import { SessionBar } from '@/components/session-bar'
+import { Text } from '@/components/ui/text'
 import { useColorToken } from '@/hooks/use-color-token'
 import { Tabs } from 'expo-router'
 import { History, Home } from 'lucide-react-native'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 export default function TabLayout() {
 	const tint = useColorToken('--accent')

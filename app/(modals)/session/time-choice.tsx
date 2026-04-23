@@ -1,7 +1,8 @@
+import { Text } from '@/components/ui/text'
 import * as Haptics from 'expo-haptics'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 
 import { AppButton } from '@/components/ui/app-button'
 import { useSession } from '@/lib/session-context'

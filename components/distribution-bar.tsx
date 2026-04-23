@@ -1,8 +1,9 @@
+import { Text } from '@/components/ui/text'
 import { useColorToken } from '@/hooks/use-color-token'
 import { formatDurationMinutes } from '@/lib/format'
 import type { CategoryDistribution } from '@/lib/recommendation'
 import { useEffect, useRef, useState } from 'react'
-import { type LayoutChangeEvent, Text, View } from 'react-native'
+import { type LayoutChangeEvent, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 const ANIMATION_DURATION = 800

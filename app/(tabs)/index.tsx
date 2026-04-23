@@ -1,7 +1,8 @@
 import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Text } from '../../components/ui/text'
 
 import { DistributionBar } from '@/components/distribution-bar'
 import {

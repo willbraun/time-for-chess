@@ -1,6 +1,7 @@
+import { Text } from '@/components/ui/text'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { getCategories, type Category } from '@/lib/sessions'
 import { AppButton } from '../../../components/ui/app-button'

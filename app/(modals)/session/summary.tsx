@@ -1,7 +1,8 @@
+import { Text } from '@/components/ui/text'
 import * as Haptics from 'expo-haptics'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import Animated, { BounceIn } from 'react-native-reanimated'
 
 import { AppButton } from '@/components/ui/app-button'

@@ -1,8 +1,9 @@
+import { Text } from '@/components/ui/text'
 import * as Haptics from 'expo-haptics'
 import { useRouter } from 'expo-router'
 import { Clock } from 'lucide-react-native'
 import { useEffect } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { AppButton } from '@/components/ui/app-button'
 import { useColorToken } from '@/hooks/use-color-token'
