@@ -10,17 +10,15 @@ import { useColorScheme } from '@/hooks/use-color-scheme'
 import { getDatabase } from '@/lib/database'
 import { SessionProvider } from '@/lib/session-context'
 import {
-	Outfit_100Thin,
-	Outfit_200ExtraLight,
-	Outfit_300Light,
-	Outfit_400Regular,
-	Outfit_500Medium,
-	Outfit_600SemiBold,
-	Outfit_700Bold,
-	Outfit_800ExtraBold,
-	Outfit_900Black,
+	PlusJakartaSans_200ExtraLight,
+	PlusJakartaSans_300Light,
+	PlusJakartaSans_400Regular,
+	PlusJakartaSans_500Medium,
+	PlusJakartaSans_600SemiBold,
+	PlusJakartaSans_700Bold,
+	PlusJakartaSans_800ExtraBold,
 	useFonts,
-} from '@expo-google-fonts/outfit'
+} from '@expo-google-fonts/plus-jakarta-sans'
 import * as SplashScreen from 'expo-splash-screen'
 
 SplashScreen.preventAutoHideAsync()
@@ -40,15 +38,13 @@ export default function RootLayout() {
 
 	// Load fonts and hide splash screen when ready
 	const [loaded, error] = useFonts({
-		Outfit_100Thin,
-		Outfit_200ExtraLight,
-		Outfit_300Light,
-		Outfit_400Regular,
-		Outfit_500Medium,
-		Outfit_600SemiBold,
-		Outfit_700Bold,
-		Outfit_800ExtraBold,
-		Outfit_900Black,
+		PlusJakartaSans_200ExtraLight,
+		PlusJakartaSans_300Light,
+		PlusJakartaSans_400Regular,
+		PlusJakartaSans_500Medium,
+		PlusJakartaSans_600SemiBold,
+		PlusJakartaSans_700Bold,
+		PlusJakartaSans_800ExtraBold,
 	})
 
 	useEffect(() => {

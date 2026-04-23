@@ -1,20 +1,20 @@
 import { Text as RNText, type TextProps } from 'react-native'
 
 const tailwindWeightMap: Record<string, string> = {
-	'font-thin': 'Outfit_100Thin',
-	'font-extralight': 'Outfit_200ExtraLight',
-	'font-light': 'Outfit_300Light',
-	'font-normal': 'Outfit_400Regular',
-	'font-medium': 'Outfit_500Medium',
-	'font-semibold': 'Outfit_600SemiBold',
-	'font-bold': 'Outfit_700Bold',
-	'font-extrabold': 'Outfit_800ExtraBold',
-	'font-black': 'Outfit_900Black',
+	'font-thin': 'PlusJakartaSans_100Thin',
+	'font-extralight': 'PlusJakartaSans_200ExtraLight',
+	'font-light': 'PlusJakartaSans_300Light',
+	'font-normal': 'PlusJakartaSans_400Regular',
+	'font-medium': 'PlusJakartaSans_500Medium',
+	'font-semibold': 'PlusJakartaSans_600SemiBold',
+	'font-bold': 'PlusJakartaSans_700Bold',
+	'font-extrabold': 'PlusJakartaSans_800ExtraBold',
+	'font-black': 'PlusJakartaSans_900Black',
 }
 
 function getFontFamily(className?: string): string {
 	const match = className?.split(' ').find(c => c in tailwindWeightMap)
-	return match ? tailwindWeightMap[match] : 'Outfit_400Regular'
+	return match ? tailwindWeightMap[match] : 'PlusJakartaSans_400Regular'
 }
 
 interface AppTextProps extends Omit<TextProps, 'style'> {

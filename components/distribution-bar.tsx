@@ -14,7 +14,6 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 	const bandLowPct = data.bandLow * 100
 	const bandHighPct = data.bandHigh * 100
 
-	const isUnder = data.actual < data.bandLow
 	const successColor = useColorToken('--success')
 
 	// Animation state
@@ -72,11 +71,11 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 		<View>
 			<Text className='font-medium text-fg-primary'>{data.name}</Text>
 			<View className='flex-row justify-between items-center mb-1.5'>
-				<Text
-					className={`text-sm font-bold tracking-wider ${isUnder ? 'text-warning' : 'text-fg-muted'}`}
-					style={{ fontVariant: ['tabular-nums'], color: getDotColor() }}
-				>
-					{displayPct}%<Text className='font-normal text-fg-muted'> / {targetPct}%</Text>
+				<Text className='text-sm'>
+					<Text className='tracking-wide font-bold' style={{ fontVariant: ['tabular-nums'], color: getDotColor() }}>
+						{displayPct}%
+					</Text>
+					<Text className='text-fg-muted'> / {targetPct}%</Text>
 				</Text>
 				<Text className='text-fg-muted text-sm' style={{ fontVariant: ['tabular-nums'] }}>
 					{formatDurationMinutes(data.total_seconds)}
