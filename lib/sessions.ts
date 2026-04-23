@@ -80,9 +80,10 @@ export async function logPresetSession(categoryId: number, durationSeconds: numb
 	const db = await getDatabase()
 	const now = Math.floor(Date.now() / 1000)
 	const startTime = now - durationSeconds
+	const endTime = now
 	const result = await db.runAsync(
 		'INSERT INTO sessions (category_id, start_time, end_time, duration_seconds, status) VALUES (?, ?, ?, ?, ?)',
-		[categoryId, startTime, now, durationSeconds, 'completed'],
+		[categoryId, startTime, endTime, durationSeconds, 'completed'],
 	)
 	return result.lastInsertRowId
 }
