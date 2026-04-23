@@ -102,7 +102,7 @@ export default function HistoryScreen() {
 				contentContainerStyle={{ paddingBottom: 84, paddingTop: insets.top + 16 }}
 				ListHeaderComponent={
 					<View className='mb-2 px-5'>
-						<Text className='text-4xl font-bold mb-4 text-fg-primary'>History</Text>
+						<Text className='text-2xl font-bold mb-4 text-fg-primary'>History</Text>
 						{__DEV__ && (
 							<TouchableOpacity onPress={handleResetDb} className='mb-4 items-center py-2 rounded-xl bg-red-500'>
 								<Text className='text-white font-semibold'>Reset Database (dev)</Text>
