@@ -1,6 +1,8 @@
+import * as Haptics from 'expo-haptics'
 import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
 import { ScrollView, View } from 'react-native'
+import Animated, { BounceIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Text } from '../../components/ui/text'
 
@@ -12,8 +14,12 @@ import {
 	type Recommendation,
 } from '@/lib/recommendation'
 import { getCategories, getCategoryTotals, getCurrentStreak, getWeekSessionDays } from '@/lib/sessions'
-import { ChevronRight, Flame } from 'lucide-react-native'
+import { ChessPawn, ChessQueen, ChevronRight } from 'lucide-react-native'
 import { AppButton } from '../../components/ui/app-button'
+
+// Persists across component mounts caused by unmountOnBlur on Tabs
+let _prevTodayFilled = false
+let _initialLoadDone = false
 
 const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
@@ -26,6 +32,7 @@ export default function HomeScreen() {
 	const [, setHasData] = useState(false)
 	const [weekDays, setWeekDays] = useState<boolean[]>(Array(7).fill(false))
 	const [streak, setStreak] = useState(0)
+	const [promotionKey, setPromotionKey] = useState(0)
 
 	useFocusEffect(
 		useCallback(() => {
@@ -41,6 +48,13 @@ export default function HomeScreen() {
 				setRecommendation(getRecommendation(dist))
 				setHasData(totals.length > 0)
 				setWeekDays(days)
+				const todayFilled = days[new Date().getDay()]
+				if (_initialLoadDone && !_prevTodayFilled && todayFilled) {
+					setPromotionKey(k => k + 1)
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+				}
+				_prevTodayFilled = todayFilled
+				_initialLoadDone = true
 				setStreak(currentStreak)
 			}
 			load()
@@ -60,13 +74,13 @@ export default function HomeScreen() {
 
 	return (
 		<ScrollView className='flex-1 bg-primary' contentContainerStyle={{ paddingTop: insets.top + 16 }}>
-			<View className='px-5 pb-6'>
-				<Text className='text-2xl font-semibold mb-4 text-fg-primary'>Time for Chess</Text>
+			<View className='px-5 pb-6 flex-col gap-6'>
+				<Text className='text-2xl font-semibold text-fg-primary'>Time for Chess</Text>
 
 				{/* Streak + week calendar */}
-				<View className='mb-6'>
-					<View className='flex-row items-center gap-2 mb-2'>
-						<Text className='text-fg-primary text-xl font-medium'>{streak} Day Streak</Text>
+				<View>
+					<View className='flex-row items-center gap-2'>
+						<Text className='text-fg-primary mb-2 text-xl font-medium'>{streak} Day Streak</Text>
 					</View>
 					<View className='flex-row gap-2'>
 						{DAY_LABELS.map((label, i) => {
@@ -78,13 +92,19 @@ export default function HomeScreen() {
 										className={`w-full rounded-xl ${isToday ? 'border-2 border-accent border-dashed' : ''} ${isFilled ? 'bg-accent' : 'bg-secondary'}`}
 										style={{ aspectRatio: 1 }}
 									>
-										<Flame
-											width={28}
-											height={28}
-											color={isFilled ? 'hsl(40, 100%, 50%)' : '#fff'}
-											fill={isFilled ? 'hsl(40, 100%, 50%)' : 'none'}
-											style={{ margin: 'auto' }}
-										/>
+										{isFilled && isToday && promotionKey > 0 ? (
+											<Animated.View
+												key={promotionKey}
+												entering={BounceIn.springify().damping(8)}
+												style={{ margin: 'auto' }}
+											>
+												<ChessQueen width={26} height={26} color='white' />
+											</Animated.View>
+										) : isFilled ? (
+											<ChessQueen width={26} height={26} color='white' style={{ margin: 'auto' }} />
+										) : (
+											<ChessPawn width={26} height={26} color='white' style={{ margin: 'auto' }} />
+										)}
 									</View>
 									<Text className='text-xs text-fg-muted'>{label}</Text>
 								</View>
@@ -95,7 +115,7 @@ export default function HomeScreen() {
 
 				{/* Recommendation card */}
 				<AppButton onPress={handleRecommendationPress} variant='other'>
-					<View className='rounded-2xl p-6 mb-6 bg-primary bg-linear-to-r from-accent to-accent-subtle'>
+					<View className='rounded-2xl p-6 bg-primary bg-linear-to-r from-accent to-accent-subtle'>
 						{recommendation ? (
 							<View>
 								<Text className='text-white/70 text-lg font-semibold uppercase tracking-widest mb-1'>Recommended</Text>
@@ -113,7 +133,7 @@ export default function HomeScreen() {
 
 				{/* Distribution bars */}
 				{distribution.length > 0 && (
-					<View className='mt-1 flex gap-4'>
+					<View className='flex-col gap-4'>
 						<Text className='text-xl font-semibold text-fg-primary'>30 Day Distribution</Text>
 						{distribution.map(d => (
 							<DistributionBar key={d.category_id} data={d} />

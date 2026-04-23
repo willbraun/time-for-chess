@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { type LayoutChangeEvent, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-const ANIMATION_DURATION = 800
+const ANIMATION_DURATION = 1500
 
 export function DistributionBar({ data }: { data: CategoryDistribution }) {
 	const actualPct = Math.round(data.actual * 100)
