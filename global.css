@@ -5,32 +5,31 @@
 
 :root {
 	/* Primary (60%) */
-	--primary: hsl(0 0% 100%);
-	--surface: hsl(0 0% 97%);
-	--surface-raised: hsl(0 0% 99%);
+	--primary: hsl(40 30% 98%);
+	--surface: hsl(40 8% 90%);
+	--surface-raised: hsl(40 20% 96%);
 
 	/* Secondary (30%) */
-	--secondary: hsl(0 0% 93%);
-	--secondary-foreground: hsl(0 0% 10%);
-	--border: hsl(0 0% 88%);
+	--secondary: hsl(40 5% 86%);
+	--border: hsl(40 12% 84%);
 
 	/* Accent (10%) */
-	--accent: hsl(209 59% 44%);
-	--accent-subtle: hsl(209 59% 90%);
-	--accent-foreground: hsl(0 0% 100%);
+	--accent: hsl(209 59% 50%);
+	--accent-subtle: hsl(209 100% 29%);
 
 	/* Feedback (utility) */
-	--success: hsl(142, 71%, 45%);
+	--success: hsl(142 71% 40%);
 	--success-foreground: hsl(0 0% 100%);
-	--error: hsl(0 84% 60%);
+	--error: hsl(0 84% 58%);
 	--error-foreground: hsl(0 0% 100%);
-	--warning: hsl(17 45% 37%);
+	--warning: hsl(30 80% 40%);
 	--warning-foreground: hsl(0 0% 100%);
 
 	/* Global text scale */
-	--fg-primary: hsl(0 0% 10%);
-	--fg-secondary: hsl(0 0% 35%);
-	--fg-muted: hsl(0 0% 55%);
+	--fg-primary: hsl(30 8% 12%);
+	--fg-secondary: hsl(30 5% 38%);
+	--fg-muted: hsl(30 3% 58%);
+	--fg-accent: hsl(0 0% 100%);
 
 	@media (prefers-color-scheme: dark) {
 		/* Primary (60%) */
@@ -39,14 +38,12 @@
 		--surface-raised: hsl(0 0% 24%);
 
 		/* Secondary (30%) */
-		--secondary: hsl(0 0% 22%);
-		--secondary-foreground: hsl(0 0% 92%);
+		--secondary: hsl(0 0% 25%);
 		--border: hsl(0 0% 30%);
 
 		/* Accent (10%) */
 		--accent: hsl(209 59% 52%);
 		--accent-subtle: hsl(209 100% 23%);
-		--accent-foreground: hsl(0 0% 100%);
 
 		/* Feedback (utility) */
 		--success: hsl(142, 71%, 45%);
@@ -60,6 +57,7 @@
 		--fg-primary: hsl(0 0% 92%);
 		--fg-secondary: hsl(0 0% 65%);
 		--fg-muted: hsl(0 0% 50%);
+		--fg-accent: hsl(0 0% 100%);
 	}
 }
 
@@ -68,11 +66,9 @@
 	--color-surface: var(--surface);
 	--color-surface-raised: var(--surface-raised);
 	--color-secondary: var(--secondary);
-	--color-secondary-foreground: var(--secondary-foreground);
 	--color-border: var(--border);
 	--color-accent: var(--accent);
 	--color-accent-subtle: var(--accent-subtle);
-	--color-accent-foreground: var(--accent-foreground);
 	--color-success: var(--success);
 	--color-success-foreground: var(--success-foreground);
 	--color-error: var(--error);
@@ -82,4 +78,5 @@
 	--color-fg-primary: var(--fg-primary);
 	--color-fg-secondary: var(--fg-secondary);
 	--color-fg-muted: var(--fg-muted);
+	--color-fg-accent: var(--fg-accent);
 }

@@ -88,12 +88,12 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 			>
 				{/* Band range */}
 				<View
-					className='absolute top-0 h-full bg-black/8 dark:bg-white/20'
+					className='absolute top-0 h-full bg-fg-primary/25'
 					style={{ left: `${bandLowPct}%`, width: `${bandHighPct - bandLowPct}%` }}
 				/>
 				{/* Actual percentage dot */}
 				<Animated.View
-					className='absolute w-5 h-5 rounded-full border-2 border-white -ml-2.5'
+					className='absolute w-5 h-5 rounded-full border-2 border-fg-primary -ml-2.5'
 					style={[
 						{
 							top: '50%',

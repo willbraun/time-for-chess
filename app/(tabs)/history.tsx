@@ -87,7 +87,7 @@ export default function HistoryScreen() {
 	const renderRightActions = useCallback(
 		(id: number) => (
 			<TouchableOpacity onPress={() => handleDelete(id)} className='bg-red-500 justify-center items-center w-20'>
-				<Text className='text-white font-semibold'>Delete</Text>
+				<Text className='text-fg-accent font-semibold'>Delete</Text>
 			</TouchableOpacity>
 		),
 		[handleDelete],
@@ -106,7 +106,7 @@ export default function HistoryScreen() {
 						<Text className='text-2xl font-bold mb-4 text-fg-primary'>History</Text>
 						{__DEV__ && (
 							<TouchableOpacity onPress={handleResetDb} className='mb-4 items-center py-2 rounded-xl bg-red-500'>
-								<Text className='text-white font-semibold'>Reset Database (dev)</Text>
+								<Text className='text-fg-accent font-semibold'>Reset Database (dev)</Text>
 							</TouchableOpacity>
 						)}
 						<View className='flex-row rounded-2xl p-4 mb-2 bg-surface'>

@@ -24,7 +24,7 @@ export default function SelectScreen() {
 	}, [preselect, router])
 
 	return (
-		<View className='flex-1 gap-4 p-6'>
+		<View className='flex-1 gap-4 p-6 bg-primary'>
 			<Stack.Screen options={{ animation: preselect ? 'none' : back ? 'slide_from_left' : undefined }} />
 			<Text className='text-3xl font-bold text-fg-primary'>Choose a category</Text>
 			<View className='gap-3 mt-4'>
@@ -35,7 +35,7 @@ export default function SelectScreen() {
 						variant='surface'
 						className='py-6'
 					>
-						<Text className='text-2xl font-medium text-center text-white'>{cat.name}</Text>
+						<Text className='text-2xl font-medium text-center text-fg-primary'>{cat.name}</Text>
 					</AppButton>
 				))}
 			</View>

@@ -87,7 +87,7 @@ export default function TimeChoiceScreen() {
 			{/* Start Timer pinned to bottom */}
 			<View className='gap-3'>
 				<AppButton onPress={handleStartTimer}>
-					<Text className='text-white text-2xl font-semibold'>Start Timer</Text>
+					<Text className='text-accent-foreground text-2xl font-semibold'>Start Timer</Text>
 				</AppButton>
 			</View>
 		</View>

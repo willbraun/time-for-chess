@@ -38,7 +38,7 @@ export default function ActiveScreen() {
 				</Text>
 			</View>
 			<AppButton onPress={handleStop}>
-				<Text className='text-white text-2xl font-semibold'>End Session</Text>
+				<Text className='text-fg-accent text-2xl font-semibold'>End Session</Text>
 			</AppButton>
 		</View>
 	)

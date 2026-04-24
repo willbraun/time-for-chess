@@ -39,7 +39,7 @@ export default function SummaryScreen() {
 				</View>
 			</View>
 			<AppButton onPress={() => navigation.getParent()?.goBack()}>
-				<Text className='text-white text-2xl font-semibold'>Done</Text>
+				<Text className='text-fg-accent text-2xl font-semibold'>Done</Text>
 			</AppButton>
 		</View>
 	)

@@ -39,7 +39,7 @@ NativeWind v5 Tailwind classes throughout. **Do not use hardcoded color values**
 | --------------------------------------------------------- | -------------------- |
 | `bg-primary` / `bg-secondary` / `bg-surface`              | Backgrounds (60/30%) |
 | `border-border`                                           | Dividers and borders |
-| `bg-accent` / `text-accent-foreground`                    | Primary CTAs         |
+| `bg-accent` / `text-fg-accent`                            | Primary CTAs         |
 | `text-fg-primary` / `text-fg-secondary` / `text-fg-muted` | Text hierarchy       |
 
 Use `useColorToken('--token-name')` (from `@/hooks/use-color-token`) when you need a raw color value (e.g., for icon `color` props).

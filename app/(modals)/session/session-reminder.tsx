@@ -76,7 +76,7 @@ export default function SessionReminderScreen() {
 			{/* Primary CTAs */}
 			<View className='gap-3 flex-row'>
 				<AppButton onPress={handleContinue} className='flex-1 bg-secondary'>
-					<Text className='text-accent-foreground text-xl font-semibold'>Continue</Text>
+					<Text className='text-fg-accent text-xl font-semibold'>Continue</Text>
 				</AppButton>
 				<AppButton onPress={() => handleStop(elapsedSeconds)} className='flex-2'>
 					<Text className='text-fg-primary text-xl font-semibold'>End Session</Text>

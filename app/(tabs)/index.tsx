@@ -16,6 +16,7 @@ import {
 import { getCategories, getCategoryTotals, getCurrentStreak, getWeekSessionDays } from '@/lib/sessions'
 import { ChessPawn, ChessQueen, ChevronRight } from 'lucide-react-native'
 import { AppButton } from '../../components/ui/app-button'
+import { useColorToken } from '../../hooks/use-color-token'
 
 // Persists across component mounts caused by unmountOnBlur on Tabs
 let _prevTodayFilled = false
@@ -26,6 +27,8 @@ const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 export default function HomeScreen() {
 	const router = useRouter()
 	const insets = useSafeAreaInsets()
+	const fgSecondary = useColorToken('--fg-secondary')
+	const fgAccent = useColorToken('--fg-accent')
 
 	const [distribution, setDistribution] = useState<CategoryDistribution[]>([])
 	const [recommendation, setRecommendation] = useState<Recommendation | null>(null)
@@ -98,12 +101,12 @@ export default function HomeScreen() {
 												entering={BounceIn.springify().damping(8)}
 												style={{ margin: 'auto' }}
 											>
-												<ChessQueen width={26} height={26} color='white' />
+												<ChessQueen width={26} height={26} color={fgAccent} />
 											</Animated.View>
 										) : isFilled ? (
-											<ChessQueen width={26} height={26} color='white' style={{ margin: 'auto' }} />
+											<ChessQueen width={26} height={26} color={fgAccent} style={{ margin: 'auto' }} />
 										) : (
-											<ChessPawn width={26} height={26} color='white' style={{ margin: 'auto' }} />
+											<ChessPawn width={26} height={26} color={fgSecondary} style={{ margin: 'auto' }} />
 										)}
 									</View>
 									<Text className='text-xs text-fg-muted'>{label}</Text>
@@ -118,14 +121,16 @@ export default function HomeScreen() {
 					<View className='rounded-2xl p-6 bg-primary bg-linear-to-r from-accent to-accent-subtle'>
 						{recommendation ? (
 							<View>
-								<Text className='text-white/70 text-lg font-semibold uppercase tracking-widest mb-1'>Recommended</Text>
-								<Text className='text-white text-3xl font-semibold mb-1'>{recommendation.category.name}</Text>
+								<Text className='text-fg-accent/70 text-lg font-semibold uppercase tracking-widest mb-1'>
+									Recommended
+								</Text>
+								<Text className='text-fg-accent text-3xl font-semibold mb-1'>{recommendation.category.name}</Text>
 							</View>
 						) : (
-							<Text className='text-white text-3xl font-semibold mb-1'>You&apos;re balanced!</Text>
+							<Text className='text-fg-accent text-3xl font-semibold mb-1'>You&apos;re balanced!</Text>
 						)}
 						<View className='flex-row items-center gap-2 justify-between'>
-							<Text className='text-white/80'>{`Tap to start ${recommendation ? 'a' : 'any'} session`}</Text>
+							<Text className='text-fg-accent/80'>{`Tap to start ${recommendation ? 'a' : 'any'} session`}</Text>
 							<ChevronRight size={24} color='white' />
 						</View>
 					</View>
