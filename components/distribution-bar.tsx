@@ -88,7 +88,7 @@ export function DistributionBar({ data }: { data: CategoryDistribution }) {
 			>
 				{/* Band range */}
 				<View
-					className='absolute top-0 h-full bg-fg-primary/25'
+					className='absolute top-0 h-full bg-fg-primary/23'
 					style={{ left: `${bandLowPct}%`, width: `${bandHighPct - bandLowPct}%` }}
 				/>
 				{/* Actual percentage dot */}
